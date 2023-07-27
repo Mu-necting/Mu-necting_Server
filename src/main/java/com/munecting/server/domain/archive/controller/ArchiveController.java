@@ -1,6 +1,7 @@
 package com.munecting.server.domain.archive.controller;
 
 import com.munecting.server.domain.archive.dto.get.ArchivePlusRes;
+import com.munecting.server.domain.archive.dto.get.MusicSearchRes;
 import com.munecting.server.domain.archive.service.ArchiveService;
 import com.munecting.server.global.config.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,5 +18,10 @@ public class ArchiveController {
     @GetMapping("/{archiveId}")
     public BaseResponse<ArchivePlusRes> getArchivePlus(@PathVariable("archiveId") Long id){
         return new BaseResponse<>(archiveService.getArchivePlus(id));
+    }
+    @ResponseBody
+    @GetMapping("/search/{search}")
+    public BaseResponse<MusicSearchRes> getMusicSearch(@PathVariable("search")String id){
+        return new BaseResponse<>(archiveService.getMusicSearch(id));
     }
 }

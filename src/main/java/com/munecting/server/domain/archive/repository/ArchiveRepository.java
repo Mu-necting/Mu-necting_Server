@@ -1,6 +1,5 @@
 package com.munecting.server.domain.archive.repository;
 
-import com.munecting.server.domain.archive.dto.ArchivePlus;
 import com.munecting.server.domain.archive.dto.get.ArchivePlusRes;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +17,7 @@ public class ArchiveRepository {
                 .setParameter("id",id)
                 .getSingleResult();
     }
+
+
 
 }
