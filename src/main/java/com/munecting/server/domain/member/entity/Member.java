@@ -1,18 +1,19 @@
 package com.munecting.server.domain.member.entity;
 
+import com.munecting.server.domain.BaseEntity;
 import com.munecting.server.domain.archive.entity.Archive;
-import com.munecting.server.domain.archive.entity.Reply;
+import com.munecting.server.domain.pick.entity.Pick;
+import com.munecting.server.domain.reply.entity.Reply;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
 @Table(name = "member")
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -30,14 +31,10 @@ public class Member {
     private int pushAlarm;
     private String intro;
     private String status;
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createAt;
-    @Column(nullable = false)
-    private LocalDateTime updateAt;
-    @OneToMany(mappedBy = "memberId")
-    private List<Genre> genres = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
     private List<Archive> archives = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
-    private List<Reply> members = new ArrayList<>();
+    private List<Reply> replies = new ArrayList<>();
+    @OneToMany(mappedBy = "memberId")
+    private List<Pick> picks = new ArrayList<>();
 }

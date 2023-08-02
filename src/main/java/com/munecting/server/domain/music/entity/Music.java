@@ -1,5 +1,6 @@
 package com.munecting.server.domain.music.entity;
 
+import com.munecting.server.domain.BaseEntity;
 import com.munecting.server.domain.archive.entity.Archive;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,22 +13,19 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "music")
-public class Music {
+public class Music extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "music_id")
     private Long id;
     private String name;
     private String coverImg;
-    private String musicLink;
+    private String musicPre; //spotify 30s
+    private String musicPull; // YouTube link full
     @Enumerated(EnumType.STRING)
     private MusicGenre genre;
     private String artist;
     private String status;
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createAt;
-    @Column(nullable = false)
-    private LocalDateTime updateAt;
-    @OneToMany(mappedBy = "musicId")
-    private List<Archive> archives = new ArrayList<>();
+    @OneToOne(mappedBy = "musicId")
+    private Archive archives;
 }
