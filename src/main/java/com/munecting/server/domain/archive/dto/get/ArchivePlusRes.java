@@ -11,12 +11,11 @@ public class ArchivePlusRes {
     private String nick;
     private LocalDateTime createAt; //저장 날짜
     private String coverImg;
-    private String writing;
-    public ArchivePlusRes(String musicName,String nick,LocalDateTime createAt,String coverImg,String writing){
+
+    public ArchivePlusRes(String musicName,String nick,LocalDateTime createAt,String coverImg){
         this.musicName = musicName;
         this.nick = nick;
         this.createAt = createAt;
         this.coverImg = coverImg;
-        this.writing = writing;
     }
 }
