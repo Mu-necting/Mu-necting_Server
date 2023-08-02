@@ -1,4 +1,4 @@
-package com.munecting.server.domain.archive.dto.get;
+package com.munecting.server.domain.music.dto.get;
 
 import lombok.Getter;
 import se.michaelthelin.spotify.model_objects.specification.Image;

@@ -1,5 +1,7 @@
-package com.munecting.server.domain.archive.entity;
+package com.munecting.server.domain.reply.entity;
 
+import com.munecting.server.domain.BaseEntity;
+import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "reply")
-public class Reply {
+public class Reply extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reply_id")
@@ -22,9 +24,5 @@ public class Reply {
     @JoinColumn(name = "member_id")
     private Member memberId;
     private String status;
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createAt;
-    @Column(nullable = false)
-    private LocalDateTime updateAt;
 
 }
