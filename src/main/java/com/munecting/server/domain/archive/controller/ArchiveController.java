@@ -20,5 +20,4 @@ public class ArchiveController {
     public BaseResponse<ArchivePlusRes> getArchivePlus(@PathVariable("archiveId") Long id){
         return new BaseResponse<>(archiveService.getArchivePlus(id));
     }
-
 }
