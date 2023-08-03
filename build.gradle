@@ -32,6 +32,7 @@ dependencies {
 
     //spotify api
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
+
 }
 //spotify api
 allprojects {
