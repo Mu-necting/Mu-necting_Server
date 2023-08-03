@@ -2,7 +2,6 @@ package com.munecting.server.domain.archive.service;
 
 import com.munecting.server.domain.archive.dto.get.ArchivePlusRes;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
-import com.munecting.server.global.utils.spotify.TokenSpotify;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

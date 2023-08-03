@@ -15,3 +15,4 @@ public class MusicSearchRes {
         this.coverImg = coverImg;
     }
 }
+
