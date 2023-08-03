@@ -1,6 +1,6 @@
 package com.munecting.server.domain.music.service;
 
-import com.munecting.server.domain.music.dto.get.MusicSSearchRes;
+import com.munecting.server.domain.music.dto.get.MusicSearchPageRes;
 import com.munecting.server.domain.music.dto.get.MusicSearchRes;
 import com.munecting.server.domain.music.repository.MusicRepository;
 import com.munecting.server.global.utils.spotify.TokenSpotify;
@@ -15,13 +15,14 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.special.SearchResult;
 import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
-import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.data.albums.GetAlbumRequest;
 import se.michaelthelin.spotify.requests.data.search.SearchItemRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,33 +33,22 @@ public class MusicService {
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(TokenSpotify.accessToken())
             .build();
-    //스포티파이 앨범 하나 data 가져오기
-    public MusicSearchRes getMusicPlusSearch(String id){
-        try {
-            GetAlbumRequest getAlbumRequest = spotifyApi.getAlbum(id).build();
-            Album album = getAlbumRequest.execute();
-            log.info(album.getImages().toString());
-            MusicSearchRes musicSearchRes = new MusicSearchRes(album.getImages());
-            return musicSearchRes;
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     //music search
-    public List<MusicSSearchRes> getMusicSearch(String search){
+    public MusicSearchPageRes getMusicSearch(String search,int page){
         try {
             SearchItemRequest searchItemRequest = spotifyApi.searchItem(search, ModelObjectType.TRACK.getType())
+                    .offset(page*20)
                     .build();
             SearchResult searchResult = searchItemRequest.execute();
-
-            List<MusicSSearchRes> musicSSearchResList = new ArrayList<>();
-            for(Track track: searchResult.getTracks().getItems()){
-                AlbumSimplified album = track.getAlbum();
-
-                musicSSearchResList.add(new MusicSSearchRes(album.getName(),album.getArtists()[0].getName(),
-                        album.getImages()[0].getUrl(),track.getPreviewUrl()));
-            }
-            return musicSSearchResList;
+            int totalPage = searchResult.getTracks().getTotal()/20+(searchResult.getTracks().getTotal()%20==0?0:1);
+            return new MusicSearchPageRes(stream(searchResult.getTracks().getItems())
+                    .map(track -> {
+                        AlbumSimplified album = track.getAlbum();
+                        return new MusicSearchRes(album.getName(), album.getArtists()[0].getName(), album.getImages()[0].getUrl());
+                    })
+                    .collect(Collectors.toList()),
+                    totalPage-1);
         }catch (IOException | SpotifyWebApiException | ParseException e) {
             throw new RuntimeException(e);
         }
