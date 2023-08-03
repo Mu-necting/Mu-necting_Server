@@ -1,7 +1,12 @@
 package com.munecting.server.domain.music.service;
 
+import com.munecting.server.domain.archive.entity.Archive;
+import com.munecting.server.domain.archive.repository.ArchiveRepository;
+import com.munecting.server.domain.member.repository.MemberRepository;
 import com.munecting.server.domain.music.dto.get.MusicSearchPageRes;
 import com.munecting.server.domain.music.dto.get.MusicSearchRes;
+import com.munecting.server.domain.music.dto.post.UploadMusicReq;
+import com.munecting.server.domain.music.entity.Music;
 import com.munecting.server.domain.music.repository.MusicRepository;
 import com.munecting.server.global.utils.spotify.TokenSpotify;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +35,14 @@ import static java.util.Arrays.stream;
 @Slf4j
 public class MusicService {
     private final MusicRepository musicRepository;
+    private final ArchiveRepository archiveRepository;
+    private final MemberRepository memberRepository;
+
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(TokenSpotify.accessToken())
             .build();
 
-    //music search
+    //음악 검색
     public MusicSearchPageRes getMusicSearch(String search,int page){
         try {
             SearchItemRequest searchItemRequest = spotifyApi.searchItem(search, ModelObjectType.TRACK.getType())
@@ -52,5 +60,11 @@ public class MusicService {
         }catch (IOException | SpotifyWebApiException | ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+    //아카이브 업로드
+    @Transactional
+    public void postMusicArchive(UploadMusicReq uploadMusicReq){
+        musicRepository.postMusic(new Music(uploadMusicReq.getName(),uploadMusicReq.getCoverImg(),
+                uploadMusicReq.getMusicPre(),uploadMusicReq.getMusicPull(),uploadMusicReq.getGenre(),uploadMusicReq.getArtist()));
     }
 }

@@ -7,12 +7,14 @@ import com.munecting.server.domain.pick.entity.Pick;
 import com.munecting.server.domain.reply.entity.Reply;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "archive")
 public class Archive extends BaseEntity {
@@ -26,13 +28,20 @@ public class Archive extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
     private Music musicId;
-    private Float pointX;   //(x,y) 좌표
-    private Float pointY;
+    private float pointX;   //(x,y) 좌표
+    private float pointY;
     private int replyCnt;
     private LocalDateTime endTime;
-    private String status;
+    private String status = "ACTIVE";
     @OneToMany(mappedBy = "archiveId")
     private List<Reply> replies = new ArrayList<>();
     @OneToMany(mappedBy = "archiveId")
     private List<Pick> picks = new ArrayList<>();
+    public Archive(Member memberId,Music musicId,float pointX,float pointY,LocalDateTime endTime){
+        this.memberId = memberId;
+        this.musicId = musicId;
+        this.pointX = pointX;
+        this.pointY = pointY;
+        this.endTime = endTime;
+    }
 }
