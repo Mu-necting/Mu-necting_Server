@@ -1,9 +1,12 @@
 package com.munecting.server.domain.music.controller;
 
-import com.munecting.server.domain.music.dto.get.MusicSSearchRes;
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.munecting.server.domain.music.dto.get.MusicSearchPageRes;
 import com.munecting.server.domain.music.dto.get.MusicSearchRes;
+import com.munecting.server.domain.music.dto.post.UploadMusicReq;
 import com.munecting.server.domain.music.service.MusicService;
 import com.munecting.server.global.config.BaseResponse;
+import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -11,21 +14,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/archive")
+@RequestMapping("/musics")
 @RequiredArgsConstructor
 @Slf4j
 public class MusicController {
     private final MusicService musicService;
-    //앨범 하나 조회-music도메인으로 변경 예정
+
+    //음악 검색
     @ResponseBody
-    @GetMapping("/search/{search}")
-    public BaseResponse<MusicSearchRes> getMusicPlusSearch(@PathVariable("search")String id){
-        return new BaseResponse<>(musicService.getMusicPlusSearch(id));
+    @GetMapping("")
+    public BaseResponse<MusicSearchPageRes> getMusicSearch(String search, int page){
+        return new BaseResponse<>(musicService.getMusicSearch(search,page));
     }
-    //음악 검색 - music도메인으로 변경 예정
+    //아카이브 업로드
     @ResponseBody
-    @GetMapping("/music")
-    public BaseResponse<List<MusicSSearchRes>> getMusicSearch(String search){
-        return new BaseResponse<>(musicService.getMusicSearch(search));
+    @PostMapping("")
+    public BaseResponse postMusicArchive(@RequestBody UploadMusicReq uploadMusicReq){
+        musicService.postMusicArchive(uploadMusicReq);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 }

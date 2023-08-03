@@ -1,5 +1,6 @@
 package com.munecting.server.domain.member.repository;
 
+import com.munecting.server.domain.member.entity.Member;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -8,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class MemberRepository {
     private final EntityManager em;
+    //멤버 Id로 찾기
+    public Member findByIdMember(Long id){ return em.find(Member.class,id); }
 }

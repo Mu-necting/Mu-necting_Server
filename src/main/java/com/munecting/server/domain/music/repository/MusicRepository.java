@@ -13,4 +13,5 @@ public class MusicRepository {
     public void postMusic(Music music){
         em.persist(music);
     }
+    public Music findByIdMusic(Long id){ return em.find(Music.class,id); }
 }
