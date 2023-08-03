@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class ArchiveController {
     private final ArchiveService archiveService;
+
+    //아카이브 상세 조회
     @ResponseBody
     @GetMapping("/{archiveId}")
     public BaseResponse<ArchivePlusRes> getArchivePlus(@PathVariable("archiveId") Long id){
