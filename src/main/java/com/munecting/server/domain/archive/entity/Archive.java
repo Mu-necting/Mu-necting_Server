@@ -28,8 +28,8 @@ public class Archive extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
     private Music musicId;
-    private float pointX;   //(x,y) 좌표
-    private float pointY;
+    private double pointX;   //(x,y) 좌표
+    private double pointY;
     private int replyCnt;
     private LocalDateTime endTime;
     private String status = "ACTIVE";
@@ -37,7 +37,7 @@ public class Archive extends BaseEntity {
     private List<Reply> replies = new ArrayList<>();
     @OneToMany(mappedBy = "archiveId")
     private List<Pick> picks = new ArrayList<>();
-    public Archive(Member memberId,Music musicId,float pointX,float pointY,LocalDateTime endTime){
+    public Archive(Member memberId,Music musicId,double pointX,double pointY,LocalDateTime endTime){
         this.memberId = memberId;
         this.musicId = musicId;
         this.pointX = pointX;
