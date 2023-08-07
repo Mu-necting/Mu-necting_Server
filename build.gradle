@@ -23,12 +23,36 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
+    implementation group: 'org.springframework.security', name: 'spring-security-messaging', version: '5.6.2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.jetbrains:annotations:23.0.0'
+//	implementation 'com.mysql:mysql-connector-java:8.0.28'
+//	compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Spring security
+    implementation 'org.springframework.security:spring-security-core'
+
+    // JWT
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+    // Redis -> 로그아웃을 요청한 사용자의 토큰을 저장하고 토큰의 만료 시간을 지정하여 사용자가 로그아웃한 시점부터 일정 시간 동안 해당 토큰이 유효하지 않도록 함.
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // email 관련
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // OAuth
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+
+    // JSON
+    implementation 'org.json:json:20210307'
 
     //spotify api
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
