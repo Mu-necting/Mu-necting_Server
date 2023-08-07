@@ -1,11 +1,12 @@
 package com.munecting.server.domain.member.repository;
 
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import com.munecting.server.domain.member.DTO.MemberDTO;
+import com.munecting.server.domain.member.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-@RequiredArgsConstructor
-public class MemberRepository {
-    private final EntityManager em;
+
+import java.util.Optional;
+
+public interface MemberRepository extends JpaRepository<MemberDTO, Long> {
+    Optional<Member> findByEmail(String email);
 }
