@@ -29,4 +29,5 @@ public class ArchiveController {
     public BaseResponse<List<ArchiveRes>> getArchives(double x,double y,int range){
         return new BaseResponse<>(archiveService.getArchive(x,y,range));
     }
+
 }
