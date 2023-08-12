@@ -59,8 +59,8 @@ public class MusicService {
     }
     //아카이브 업로드
     @Transactional
-    public void saveMusic(UploadMusicReq uploadMusicReq){
-        musicRepository.save(new Music(uploadMusicReq.getName(),uploadMusicReq.getCoverImg(),
-                uploadMusicReq.getMusicPre(),uploadMusicReq.getMusicPull(),uploadMusicReq.getGenre(),uploadMusicReq.getArtist()));
+    public Music saveMusic(UploadMusicReq uploadMusicReq){
+        return musicRepository.save(new Music(uploadMusicReq.getName(), uploadMusicReq.getCoverImg(),
+                uploadMusicReq.getMusicPre(), uploadMusicReq.getMusicPull(), uploadMusicReq.getGenre(), uploadMusicReq.getArtist()));
     }
 }

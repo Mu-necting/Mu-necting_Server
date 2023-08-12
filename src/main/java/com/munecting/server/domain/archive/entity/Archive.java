@@ -43,31 +43,11 @@ public class Archive extends BaseEntity {
     @OneToMany(mappedBy = "archiveId")
     @ToString.Exclude
     private List<Pick> picks = new ArrayList<>();
-
-    public void setPicks(List<Pick> picks) {
-        this.picks = picks;
-    }
-
-    public void setReplies(List<Reply> replies) {
-        this.replies = replies;
-    }
-
-    public void setMusicId(Music musicId) {
+    public Archive(Member memberId,Music musicId,double pointX,double pointY,LocalDateTime endTime){
+        this.memberId = memberId;
         this.musicId = musicId;
-    }
-
-    public void setMemberId(Member memberId) {
-        this.memberId = memberId;
-    }
-
-    public Archive(Member memberId,double pointX,double pointY,LocalDateTime endTime){
-        this.memberId = memberId;
         this.pointX = pointX;
         this.pointY = pointY;
-        this.endTime = endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 }

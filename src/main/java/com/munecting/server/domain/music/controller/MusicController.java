@@ -32,8 +32,7 @@ public class MusicController {
     @Transactional
     @PostMapping("")
     public BaseResponse postMusicArchive(@RequestBody UploadMusicReq uploadMusicReq){
-        musicService.saveMusic(uploadMusicReq);
-        archiveService.saveArchive(uploadMusicReq);
+        archiveService.saveArchive(uploadMusicReq,musicService.saveMusic(uploadMusicReq));
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 }

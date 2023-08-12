@@ -5,6 +5,7 @@ import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.music.dto.post.UploadMusicReq;
+import com.munecting.server.domain.music.entity.Music;
 import com.munecting.server.domain.music.entity.MusicGenre;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
@@ -39,7 +40,7 @@ class ArchiveServiceTest {
         UploadMusicReq uploadMusicReq = new UploadMusicReq("", "", "", "", "", MusicGenre.POP, LocalDateTime.now().plusHours(1)
                 , 37.5393673, 126.9685016, 1);
 
-        archiveService.saveArchive(uploadMusicReq);
+        archiveService.saveArchive(uploadMusicReq,new Music());
 
         Archive result = archiveRepository.findById(Long.valueOf(1)).get();
         log.info("endTime = "+result.getEndTime());
