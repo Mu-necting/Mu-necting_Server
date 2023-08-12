@@ -19,7 +19,7 @@ public class UploadMusicReq {
     private MusicGenre genre;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime endTime;
-    private float pointX;
-    private float pointY;
-    private Long memberId;
+    private double pointX;
+    private double pointY;
+    private int memberId;
 }
