@@ -2,6 +2,7 @@ package com.munecting.server.domain.archive.dto.get;
 
 import com.munecting.server.domain.music.entity.MusicGenre;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
 @Getter
@@ -14,4 +15,5 @@ public class ArchiveRes {
     private String musicPull;
     private int replyCnt;
     private Long archiveId;
+    private String artist;
 }

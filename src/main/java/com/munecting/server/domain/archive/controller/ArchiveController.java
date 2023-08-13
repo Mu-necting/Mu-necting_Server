@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,17 +18,10 @@ import java.util.List;
 public class ArchiveController {
     private final ArchiveService archiveService;
 
-    //아카이브 상세 조회
-    @ResponseBody
-    @GetMapping("/{archiveId}")
-    public BaseResponse<ArchivePlusRes> getArchivePlus(@PathVariable("archiveId") Long id){
-        return new BaseResponse<>(archiveService.getArchivePlus(id));
-    }
     //주변에 있는 아카이브 조회
     @ResponseBody
     @GetMapping("")
     public BaseResponse<List<ArchiveRes>> getArchives(double x,double y,int range){
-        return new BaseResponse<>(archiveService.getArchive(x,y,range));
+        return new BaseResponse<>(archiveService.findNearArchive(x,y,range));
     }
-
 }
