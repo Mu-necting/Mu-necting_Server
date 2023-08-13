@@ -1,6 +1,5 @@
 package com.munecting.server.domain.music.service;
 
-import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
 import com.munecting.server.domain.member.repository.MemberRepository;
 import com.munecting.server.domain.music.dto.get.MusicSearchPageRes;
@@ -18,13 +17,10 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.special.SearchResult;
-import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
-import se.michaelthelin.spotify.requests.data.albums.GetAlbumRequest;
 import se.michaelthelin.spotify.requests.data.search.SearchItemRequest;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
@@ -63,8 +59,8 @@ public class MusicService {
     }
     //아카이브 업로드
     @Transactional
-    public void postMusicArchive(UploadMusicReq uploadMusicReq){
-        musicRepository.postMusic(new Music(uploadMusicReq.getName(),uploadMusicReq.getCoverImg(),
-                uploadMusicReq.getMusicPre(),uploadMusicReq.getMusicPull(),uploadMusicReq.getGenre(),uploadMusicReq.getArtist()));
+    public Music saveMusic(UploadMusicReq uploadMusicReq){
+        return musicRepository.save(new Music(uploadMusicReq.getName(), uploadMusicReq.getCoverImg(),
+                uploadMusicReq.getMusicPre(), uploadMusicReq.getMusicPull(), uploadMusicReq.getGenre(), uploadMusicReq.getArtist()));
     }
 }
