@@ -8,8 +8,10 @@ import com.munecting.server.domain.reply.entity.Reply;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +26,11 @@ public class Archive extends BaseEntity {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @ToString.Exclude
     private Member memberId;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
+    @ToString.Exclude
     private Music musicId;
     private double pointX;   //(x,y) 좌표
     private double pointY;
@@ -34,8 +38,10 @@ public class Archive extends BaseEntity {
     private LocalDateTime endTime;
     private String status = "ACTIVE";
     @OneToMany(mappedBy = "archiveId")
+    @ToString.Exclude
     private List<Reply> replies = new ArrayList<>();
     @OneToMany(mappedBy = "archiveId")
+    @ToString.Exclude
     private List<Pick> picks = new ArrayList<>();
     public Archive(Member memberId,Music musicId,double pointX,double pointY,LocalDateTime endTime){
         this.memberId = memberId;
@@ -43,5 +49,9 @@ public class Archive extends BaseEntity {
         this.pointX = pointX;
         this.pointY = pointY;
         this.endTime = endTime;
+    }
+    //test용
+    public Archive(Member memberId){
+        this.memberId = memberId;
     }
 }
