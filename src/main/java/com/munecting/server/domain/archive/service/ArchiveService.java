@@ -34,7 +34,7 @@ public class ArchiveService {
         memberRepository.save(new Member("member1"));
 
         LocalDateTime endTime = LocalDateTime.now().plusHours(uploadMusicReq.getPlusTime());
-        Optional<Member> findMember = memberRepository.findById(Long.valueOf(uploadMusicReq.getMemberId()));
+        Optional<Member> findMember = memberRepository.findById((long) uploadMusicReq.getMemberId());
         archiveRepository.save(
                 new Archive(findMember.get(),music,uploadMusicReq.getPointX(), uploadMusicReq.getPointY(),
                         endTime)
