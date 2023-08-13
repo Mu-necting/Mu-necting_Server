@@ -17,8 +17,7 @@ public class UploadMusicReq {
     private String musicPull;
     private String artist;
     private MusicGenre genre;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime endTime;
+    private int plusTime;
     private double pointX;
     private double pointY;
     private int memberId;

@@ -33,11 +33,11 @@ public class ArchiveService {
     public void saveArchive(UploadMusicReq uploadMusicReq, Music music) {
         Member member1 = new Member("member1");
         em.persist(member1);
-
+        LocalDateTime endTime = LocalDateTime.now().plusHours(uploadMusicReq.getPlusTime());
         Optional<Member> findMember = memberRepository.findById(Long.valueOf(uploadMusicReq.getMemberId()));
         archiveRepository.save(
                 new Archive(findMember.get(),music,uploadMusicReq.getPointX(), uploadMusicReq.getPointY(),
-                        uploadMusicReq.getEndTime())
+                        endTime)
         );
 
     }
