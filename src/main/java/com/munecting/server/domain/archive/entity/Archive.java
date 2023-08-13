@@ -50,4 +50,8 @@ public class Archive extends BaseEntity {
         this.pointY = pointY;
         this.endTime = endTime;
     }
+    //test용
+    public Archive(Member memberId){
+        this.memberId = memberId;
+    }
 }
