@@ -37,7 +37,7 @@ class ArchiveServiceTest {
     void saveArchive(){
         Member member1 = new Member("member1");
         em.persist(member1);
-        UploadMusicReq uploadMusicReq = new UploadMusicReq("", "", "", "", "", MusicGenre.POP, LocalDateTime.now().plusHours(1)
+        UploadMusicReq uploadMusicReq = new UploadMusicReq("", "", "", "", "", MusicGenre.POP, 1
                 , 37.5393673, 126.9685016, 1);
 
         archiveService.saveArchive(uploadMusicReq,new Music());

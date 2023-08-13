@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class ArchiveService {
@@ -29,7 +29,10 @@ public class ArchiveService {
     private final MemberRepository memberRepository;
 
     //아카이브 저장
+    @Transactional
     public void saveArchive(UploadMusicReq uploadMusicReq, Music music) {
+        memberRepository.save(new Member("member1"));
+
         LocalDateTime endTime = LocalDateTime.now().plusHours(uploadMusicReq.getPlusTime());
         Optional<Member> findMember = memberRepository.findById(Long.valueOf(uploadMusicReq.getMemberId()));
         archiveRepository.save(
@@ -38,7 +41,6 @@ public class ArchiveService {
         );
 
     }
-    @Transactional(readOnly = true)
     //주변에 있는 아카이브 조회
     public List<ArchiveRes> findNearArchive(double x, double y, int range) {
         return archiveRepository.findNearArchive(x, y, range);
