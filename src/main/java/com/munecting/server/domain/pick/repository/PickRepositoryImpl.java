@@ -23,6 +23,7 @@ public class PickRepositoryImpl implements PickRepositoryCustom{
     public PickRepositoryImpl(EntityManager em) {
         queryFactory = new JPAQueryFactory(em);
     }
+    //내가 픽한 픽 조회-최신순
     @Override
     public PicksPageRes findPicksByMember(Member member, Pageable pageable){
         List<PicksRes> picksRes = queryFactory
