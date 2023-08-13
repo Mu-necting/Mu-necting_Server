@@ -27,12 +27,9 @@ import java.util.Optional;
 public class ArchiveService {
     private final ArchiveRepository archiveRepository;
     private final MemberRepository memberRepository;
-    @PersistenceContext
-    EntityManager em;
+
     //아카이브 저장
     public void saveArchive(UploadMusicReq uploadMusicReq, Music music) {
-        Member member1 = new Member("member1");
-        em.persist(member1);
         LocalDateTime endTime = LocalDateTime.now().plusHours(uploadMusicReq.getPlusTime());
         Optional<Member> findMember = memberRepository.findById(Long.valueOf(uploadMusicReq.getMemberId()));
         archiveRepository.save(
