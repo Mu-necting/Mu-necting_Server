@@ -16,7 +16,8 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
         return em.createQuery("SELECT new com.munecting.server.domain.archive.dto.get.ArchiveRes(a.musicId.name,a.musicId.coverImg,a.musicId.genre,a.musicId.musicPre,a.musicId.musicPull,a.replyCnt,a.id," +
                         "a.musicId.artist) " +
                         " FROM Archive a " +
-                        "where ST_Distance_Sphere(Point(:y,:x),Point(a.pointY,a.pointX)) <= :range ",ArchiveRes.class)
+                        "where ST_Distance_Sphere(Point(:y,:x),Point(a.pointY,a.pointX)) <= :range " +
+                        "and a.endTime > now()",ArchiveRes.class)
                 .setParameter("x",x)
                 .setParameter("y",y)
                 .setParameter("range",range)

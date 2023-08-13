@@ -1,6 +1,5 @@
 package com.munecting.server.domain.archive.controller;
 
-import com.munecting.server.domain.archive.dto.get.ArchivePlusRes;
 import com.munecting.server.domain.archive.dto.get.ArchiveRes;
 import com.munecting.server.domain.archive.service.ArchiveService;
 import com.munecting.server.global.config.BaseResponse;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
