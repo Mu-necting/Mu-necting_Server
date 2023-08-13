@@ -1,6 +1,7 @@
 package com.munecting.server.domain.archive.service;
 
 import com.munecting.server.domain.archive.dto.get.ArchiveRes;
+import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
 import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
 import com.munecting.server.domain.member.entity.Member;
@@ -12,6 +13,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +46,10 @@ public class ArchiveService {
     //주변에 있는 아카이브 조회
     public List<ArchiveRes> findNearArchive(double x, double y, int range) {
         return archiveRepository.findNearArchive(x, y, range);
+    }
+    //내가 없로드한 아카이브 조회
+    public MyArchivePageRes findArchiveByMember(long memberId, Pageable pageable){
+        Optional<Member> findMember = memberRepository.findById(memberId);
+        return archiveRepository.findArchiveByMember(findMember.get(),pageable);
     }
 }
