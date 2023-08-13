@@ -70,9 +70,6 @@ public class Member implements UserDetails {
     public void create_at(){
         this.created_at = LocalDateTime.now();
     }
-
-    @OneToMany(mappedBy = "memberId")
-    private List<Genre> genres = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
     private List<Archive> archives = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
