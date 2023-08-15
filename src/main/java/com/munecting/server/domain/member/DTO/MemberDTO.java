@@ -44,8 +44,6 @@ public class MemberDTO {
                 .email(email)
                 .password(password)
                 .name(name)
-                .phone(phone)
-                .intro(intro)
                 .profileImage(profileImage)
                 .status(status)
                 .role(role)
