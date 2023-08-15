@@ -16,4 +16,5 @@ public class ArchiveRes {
     private int replyCnt;
     private Long archiveId;
     private String artist;
+    private int pickCnt;
 }

@@ -29,6 +29,7 @@ public class PickService {
     public void savePick(PickReq pickReq){
         Optional<Member> findMember = memberRepository.findById(pickReq.getMemberId());
         Optional<Archive> findArchive = archiveRepository.findById(pickReq.getArchiveId());
+        findArchive.get().setPickCnt();
         pickRepository.save(new Pick(pickReq.getWriting(),findMember.get(),findArchive.get()));
     }
     //내가한 픽s 조회
