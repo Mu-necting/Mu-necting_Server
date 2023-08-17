@@ -1,5 +1,6 @@
 package com.munecting.server.domain.archive.service;
 
+import com.munecting.server.domain.archive.dto.get.ArchiveDetailRes;
 import com.munecting.server.domain.archive.dto.get.ArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MapArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
@@ -56,5 +57,9 @@ public class ArchiveService {
     // 맵 아카이브 조회
     public List<MapArchiveRes> findMapArchive(double x,double y,int range){
         return archiveRepository.findMapArchive(x,y,range);
+    }
+    // 아카이브 상세 조회
+    public ArchiveDetailRes findArchiveDetail(long id){
+        return archiveRepository.findArchiveDetailById(id);
     }
 }

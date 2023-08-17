@@ -1,9 +1,11 @@
 package com.munecting.server.domain.archive.repository;
 
+import com.munecting.server.domain.archive.dto.get.ArchiveDetailRes;
 import com.munecting.server.domain.archive.dto.get.ArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivesRes;
 import com.munecting.server.domain.archive.entity.Archive;
+import com.munecting.server.domain.archive.entity.QArchive;
 import com.munecting.server.domain.archive.service.ArchiveService;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.music.dto.post.UploadMusicReq;
@@ -17,6 +19,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.munecting.server.domain.archive.entity.QArchive.*;
 import static com.munecting.server.domain.archive.entity.QArchive.archive;
 import static com.munecting.server.domain.pick.entity.QPick.pick;
 import static org.junit.jupiter.api.Assertions.*;
@@ -95,5 +99,28 @@ class ArchiveRepositoryImplTest {
         MyArchivePageRes myArchivePageRes = new MyArchivePageRes(myArchivesRes, totalCnt - 1);
         log.info("picksPageRes : "+myArchivePageRes);
         log.info("totalCnt:"+totalCnt);
+    }
+    @Test
+    void 아카이브상세조회테스트(){
+        long id = 1;
+        Archive archive = em.find(Archive.class, 1);
+        ArchiveDetailRes findDto = new ArchiveDetailRes(archive.getMusicId().getCoverImg(), archive.getMusicId().getGenre(),
+                archive.getMusicId().getName(), archive.getMusicId().getArtist(),
+                archive.getReplyCnt(), archive.getPickCnt(), archive.getCreateAt());
+
+        ArchiveDetailRes result = queryFactory
+                .select(Projections.constructor(ArchiveDetailRes.class,
+                        QArchive.archive.musicId.coverImg,
+                        QArchive.archive.musicId.genre,
+                        QArchive.archive.musicId.name,
+                        QArchive.archive.musicId.artist,
+                        QArchive.archive.replyCnt,
+                        QArchive.archive.pickCnt,
+                        QArchive.archive.createAt
+                ))
+                .from(QArchive.archive)
+                .where(QArchive.archive.id.eq(id))
+                .fetchOne();
+        Assertions.assertThat(result).isEqualTo(findDto);
     }
 }
