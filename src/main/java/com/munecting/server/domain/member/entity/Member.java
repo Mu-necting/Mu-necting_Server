@@ -75,6 +75,10 @@ public class Member implements UserDetails {
     public Member(String name){
         this.name = name;
     }
+    public Member(String name,long allReplyCnt){
+        this.name = name;
+        this.allReplyCnt = allReplyCnt;
+    }
     public MemberDTO toDTO() {
         return MemberDTO.builder()
                 .email(email)
