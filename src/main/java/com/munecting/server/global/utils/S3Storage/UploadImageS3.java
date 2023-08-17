@@ -21,7 +21,7 @@ public class UploadImageS3 {
     @Autowired
     private final AmazonS3 amazonS3;
 
-    @Value("${aws.s3.image.bucket:i-image}")
+    @Value("${aws.s3.image.bucket:munecting}")
     private String bucket;
 
     // 업로드
