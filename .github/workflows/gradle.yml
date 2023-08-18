@@ -46,8 +46,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws s3 cp \
-          --region ${{ secrests.AWS_REGION }} \
-          --acl private \./springboot-intro-build.zip s3://${{ secrests.AWS_S3_BUCKET }}/
+          --region ${{ secrets.AWS_REGION }} \
+          --acl private \./springboot-intro-build.zip s3://${{ secrets.AWS_S3_BUCKET }}/
   
       # uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       # with:
