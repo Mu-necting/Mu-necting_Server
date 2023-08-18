@@ -51,6 +51,10 @@ public class Archive extends BaseEntity {
         this.pointY = pointY;
         this.endTime = endTime;
     }
+    //setter
+    public void setPickCnt(){
+        this.pickCnt +=1;
+    }
     //test용
     public Archive(Member memberId,Music musicId){
         this.memberId = memberId;

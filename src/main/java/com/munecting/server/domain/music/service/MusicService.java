@@ -47,7 +47,8 @@ public class MusicService {
             return new MusicSearchPageRes(stream(searchResult.getTracks().getItems())
                     .map(track -> {
                         AlbumSimplified album = track.getAlbum();
-                        return new MusicSearchRes(album.getName(), album.getArtists()[0].getName(), album.getImages()[0].getUrl());
+                        return new MusicSearchRes(album.getName(), album.getArtists()[0].getName(), album.getImages()[0].getUrl(),
+                                track.getPreviewUrl());
                     })
                     .collect(Collectors.toList()),
                     totalPage-1);

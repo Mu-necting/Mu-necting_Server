@@ -1,6 +1,7 @@
 package com.munecting.server.domain.archive.service;
 
 import com.munecting.server.domain.archive.dto.get.ArchiveRes;
+import com.munecting.server.domain.archive.dto.get.MapArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
 import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
@@ -51,5 +52,9 @@ public class ArchiveService {
     public MyArchivePageRes findArchiveByMember(long memberId, Pageable pageable){
         Optional<Member> findMember = memberRepository.findById(memberId);
         return archiveRepository.findArchiveByMember(findMember.get(),pageable);
+    }
+    // 맵 아카이브 조회
+    public List<MapArchiveRes> findMapArchive(double x,double y,int range){
+        return archiveRepository.findMapArchive(x,y,range);
     }
 }
