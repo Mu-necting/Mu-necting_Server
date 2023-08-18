@@ -26,10 +26,10 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                         Projections.constructor(MemberRankRes.class,
                         member.profileImage,
                         member.name,
-                        member.allReplyCnt))
+                        member.all_replyCnt))
                 .from(member)
                 .where(member.status.eq('A'))
-                .orderBy(member.allReplyCnt.desc())
+                .orderBy(member.all_replyCnt.desc())
                 .limit(rank)
                 .fetch();
     }
