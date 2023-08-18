@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url : ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PW}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+logging:
+  level:
+    org.hibernate.sql: debug
+# spotify
+spotify:
+  client : ${SPOTIFY_CLIENT}
+  secret : ${SPOTIFY_SECRET}
+# S3
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+      instance-profile: true
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+    region:
+      static: ${AWS_REGION}
+    stack:
+       auto: false
