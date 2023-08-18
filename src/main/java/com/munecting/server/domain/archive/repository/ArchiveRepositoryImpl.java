@@ -1,9 +1,6 @@
 package com.munecting.server.domain.archive.repository;
 
-import com.munecting.server.domain.archive.dto.get.ArchiveRes;
-import com.munecting.server.domain.archive.dto.get.MapArchiveRes;
-import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
-import com.munecting.server.domain.archive.dto.get.MyArchivesRes;
+import com.munecting.server.domain.archive.dto.get.*;
 import com.munecting.server.domain.archive.entity.QArchive;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.pick.dto.get.PicksPageRes;
@@ -74,5 +71,24 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
                 .fetchOne();
         totalCnt = totalCnt/2+(totalCnt%2==0?0:1);
         return new MyArchivePageRes(myArchivesRes,totalCnt-1);
+    }
+    //아카이브 디테일 조회
+
+    @Override
+    public ArchiveDetailRes findArchiveDetailById(long id) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        return queryFactory
+                .select(Projections.constructor(ArchiveDetailRes.class,
+                        archive.musicId.coverImg,
+                        archive.musicId.genre,
+                        archive.musicId.name,
+                        archive.musicId.artist,
+                        archive.replyCnt,
+                        archive.pickCnt,
+                        archive.createAt
+                ))
+                .from(archive)
+                .where(archive.id.eq(id))
+                .fetchOne();
     }
 }

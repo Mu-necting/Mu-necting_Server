@@ -74,6 +74,9 @@ dependencies {
     //log남기기
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
+    //aws
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 //spotify api
 allprojects {
