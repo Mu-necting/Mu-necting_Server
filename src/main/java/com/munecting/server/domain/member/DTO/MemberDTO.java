@@ -21,19 +21,13 @@ public class MemberDTO {
 
     private String name;
 
-    private String phone;
-
-    private String intro;
+    private Long all_replyCnt;
 
     private String profileImage;
 
     private char status;
 
     private String role;
-
-    private LocalDateTime created_at;
-
-    private LocalDateTime updated_at;
 
     private LocalDateTime login_at;
 
@@ -44,11 +38,10 @@ public class MemberDTO {
                 .email(email)
                 .password(password)
                 .name(name)
+                .all_replyCnt(all_replyCnt)
                 .profileImage(profileImage)
                 .status(status)
                 .role(role)
-                .created_at(created_at)
-                .updated_at(updated_at)
                 .login_at(login_at)
                 .login_cnt(login_cnt)
                 .build();
