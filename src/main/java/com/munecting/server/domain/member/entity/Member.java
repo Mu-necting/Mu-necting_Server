@@ -7,7 +7,6 @@ import com.munecting.server.domain.reply.entity.Reply;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,79 +21,65 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-@ToString(of = {"userIdx","name"})
-public class Member implements UserDetails {
+public class Member extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)// , generator = "user_sequence"
     private Long userIdx;
 
-    @Column(name = "email", nullable = true, unique = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = true) //nullable
+    @Column(name = "password", nullable = true)
     private String password;
 
-    @Column(name = "name", nullable = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "phone", nullable = true)
-    private String phone;
+    @Column(name = "all_replyCnt", nullable = false)
+    private Long all_replyCnt;
 
-    @Column(name = "intro", nullable = true)
-    private String intro;
-
-    @Column(name = "profileImage", nullable = true) //nullable
+    @Column(name = "profileImage", nullable = true)
     private String profileImage;
 
     @Column(name = "status", nullable = false)
     @ColumnDefault("'A'") // A: 활성 유저 D: 탈퇴 유저
     private char status;
 
-    @Column(name = "role", nullable = true) // User
+    @Column(name = "role", nullable = false) // User
     private String role;
-
-    @Column(name = "created_at", nullable = true)
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime created_at;
-
-    @Column(name = "updated_at", nullable = true)
-    private LocalDateTime updated_at;
 
     @Column(name = "login_at", nullable = true)
     private LocalDateTime login_at;
 
-    @Column(name = "login_cnt", nullable = true)
-    @ColumnDefault("0")
+    @Column(name = "login_cnt", nullable = false)
     private Long login_cnt;
 
-    @PrePersist
-    public void create_at(){
-        this.created_at = LocalDateTime.now();
-    }
     @OneToMany(mappedBy = "memberId")
     private List<Archive> archives = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
     private List<Reply> members = new ArrayList<>();
-    //test 생성자
-    public Member(String name){
-        this.name = name;
-    }
+
     public MemberDTO toDTO() {
         return MemberDTO.builder()
                 .email(email)
                 .password(password)
                 .name(name)
-                .phone(phone)
-                .intro(intro)
+                .all_replyCnt(all_replyCnt)
                 .profileImage(profileImage)
                 .status(status)
                 .role(role)
-                .created_at(created_at)
-                .updated_at(updated_at)
                 .login_at(login_at)
                 .login_cnt(login_cnt)
                 .build();
+    }
+
+    public Member(String name){
+        this.name=name;
+    }
+    public Member(String name, Long all_replyCnt){
+        this.name=name;
+        this.all_replyCnt=all_replyCnt;
     }
 
     // UserDetails 상속
