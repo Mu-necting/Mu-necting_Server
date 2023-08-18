@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
 @ToString(of = {"userIdx","name"})
 public class Member implements UserDetails {
 
@@ -37,12 +37,6 @@ public class Member implements UserDetails {
 
     @Column(name = "name", nullable = true)
     private String name;
-
-    @Column(name = "phone", nullable = true)
-    private String phone;
-
-    @Column(name = "intro", nullable = true)
-    private String intro;
 
     @Column(name = "profileImage", nullable = true) //nullable
     private String profileImage;
@@ -67,6 +61,7 @@ public class Member implements UserDetails {
     @Column(name = "login_cnt", nullable = true)
     @ColumnDefault("0")
     private Long login_cnt;
+    private Long allReplyCnt;
 
     @PrePersist
     public void create_at(){
@@ -85,8 +80,6 @@ public class Member implements UserDetails {
                 .email(email)
                 .password(password)
                 .name(name)
-                .phone(phone)
-                .intro(intro)
                 .profileImage(profileImage)
                 .status(status)
                 .role(role)

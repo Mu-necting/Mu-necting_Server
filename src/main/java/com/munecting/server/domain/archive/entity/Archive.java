@@ -35,6 +35,7 @@ public class Archive extends BaseEntity {
     private double pointX;   //(x,y) 좌표
     private double pointY;
     private int replyCnt;
+    private int pickCnt;
     private LocalDateTime endTime;
     private String status = "ACTIVE";
     @OneToMany(mappedBy = "archiveId")
@@ -49,6 +50,10 @@ public class Archive extends BaseEntity {
         this.pointX = pointX;
         this.pointY = pointY;
         this.endTime = endTime;
+    }
+    //setter
+    public void setPickCnt(){
+        this.pickCnt +=1;
     }
     //test용
     public Archive(Member memberId,Music musicId){

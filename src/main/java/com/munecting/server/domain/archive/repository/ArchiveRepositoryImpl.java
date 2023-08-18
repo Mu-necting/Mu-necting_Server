@@ -1,6 +1,7 @@
 package com.munecting.server.domain.archive.repository;
 
 import com.munecting.server.domain.archive.dto.get.ArchiveRes;
+import com.munecting.server.domain.archive.dto.get.MapArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivesRes;
 import com.munecting.server.domain.archive.entity.QArchive;
@@ -27,10 +28,24 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
     @Override
     public List<ArchiveRes> findNearArchive(double x,double y,int range){
         return em.createQuery("SELECT new com.munecting.server.domain.archive.dto.get.ArchiveRes(a.musicId.name,a.musicId.coverImg,a.musicId.genre,a.musicId.musicPre,a.musicId.musicPull,a.replyCnt,a.id," +
-                        "a.musicId.artist) " +
-                        " FROM Archive a " +
+                        "a.musicId.artist,a.pickCnt) " +
+                        " FROM Archive a "+
                         "where ST_Distance_Sphere(Point(:y,:x),Point(a.pointY,a.pointX)) <= :range " +
                         "and a.endTime > now()",ArchiveRes.class)
+                .setParameter("x",x)
+                .setParameter("y",y)
+                .setParameter("range",range)
+                .getResultList();
+    }
+    //아카이브 맵 조회
+    @Override
+    public List<MapArchiveRes> findMapArchive(double x,double y,int range){
+        return em.createQuery("select new com.munecting.server.domain.archive.dto.get.MapArchiveRes(" +
+                        " a.pointX , a.pointY,a.musicId.genre,a.musicId.name,a.musicId.artist )" +
+                        "from Archive a "+
+                        "where ST_Distance_Sphere(Point(:y,:x),Point(a.pointY,a.pointX)) <= :range " +
+                        "and a.endTime > now()"
+                ,MapArchiveRes.class)
                 .setParameter("x",x)
                 .setParameter("y",y)
                 .setParameter("range",range)
