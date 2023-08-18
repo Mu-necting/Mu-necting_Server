@@ -48,7 +48,19 @@ jobs:
           aws s3 cp \
           --region ${{ secrets.AWS_REGION }} \
           --acl private \./springboot-intro-build.zip s3://${{ secrets.AWS_S3_BUCKET }}/
-  
+      # Deploy
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws deploy create-deployment \
+          --application-name munecting-code-deploy \
+          --deployment-group-name munecting-server \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=springboot-intro-build,bundleType=zip,key=springboot-intro-build.zip \
+          --region ${{ secrets.AWS_REGION }}
+          
       # uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       # with:
         # arguments: build
