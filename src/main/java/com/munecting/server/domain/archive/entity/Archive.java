@@ -28,9 +28,21 @@ public class Archive extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
     private Music musicId;
+    @Column(name = "point_x")
     private float pointX;   //(x,y) 좌표
+    @Column(name = "point_y")
     private float pointY;
     private int replyCnt;
+    public int getReplyCnt() {
+        return replyCnt;
+    }
+
+    public void increaseReplyCnt() {
+        this.replyCnt++;
+    }
+    public void decreaseReplyCnt() {
+        this.replyCnt--;
+    }
     private LocalDateTime endTime;
     private String status = "ACTIVE";
     @OneToMany(mappedBy = "archiveId")
@@ -44,4 +56,5 @@ public class Archive extends BaseEntity {
         this.pointY = pointY;
         this.endTime = endTime;
     }
+
 }

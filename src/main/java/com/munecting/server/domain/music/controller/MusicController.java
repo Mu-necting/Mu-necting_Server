@@ -1,8 +1,6 @@
 package com.munecting.server.domain.music.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.munecting.server.domain.music.dto.get.MusicSearchPageRes;
-import com.munecting.server.domain.music.dto.get.MusicSearchRes;
 import com.munecting.server.domain.music.dto.post.UploadMusicReq;
 import com.munecting.server.domain.music.service.MusicService;
 import com.munecting.server.global.config.BaseResponse;
@@ -10,8 +8,6 @@ import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/musics")
@@ -32,5 +28,8 @@ public class MusicController {
     public BaseResponse postMusicArchive(@RequestBody UploadMusicReq uploadMusicReq){
         musicService.postMusicArchive(uploadMusicReq);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+    }
+
+    public static class ReplyController {
     }
 }

@@ -1,6 +1,16 @@
 package com.munecting.server.domain.member.repository;
 
 import com.munecting.server.domain.member.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+
+}
+
+/*
+import com.munecting.server.domain.member.entity.Member;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,3 +22,4 @@ public class MemberRepository {
     //멤버 Id로 찾기
     public Member findByIdMember(Long id){ return em.find(Member.class,id); }
 }
+*/

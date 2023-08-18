@@ -28,13 +28,20 @@ public class Member extends BaseEntity {
     private Character phone;
     private String profile;
     @Column(length = 1)
-    private int pushAlarm;
-    private String intro;
+    private Integer pushAlarm;
+    private String introduce;
     private String status;
+    @Column(name = "reply_total_cnt")
+    private Integer replyTotalCnt;
+    public void setReplyTotalCnt(int replyTotalCnt) {
+        this.replyTotalCnt = replyTotalCnt;
+    }
     @OneToMany(mappedBy = "memberId")
     private List<Archive> archives = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
     private List<Reply> replies = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
     private List<Pick> picks = new ArrayList<>();
+
+
 }
