@@ -12,7 +12,13 @@ on:
     branches: [ "munecting" ]
   pull_request:
     branches: [ "munecting" ]
-
+    
+env:
+  S3_BUCKET_NAME: munecting
+  RESOURCE_PATH: ./src/main/resources/application.yaml
+  CODE_DEPLOY_APPLICATION_NAME: munecting-code-deploy
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: munecting-server
+  
 permissions:
   contents: read
 
