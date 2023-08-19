@@ -54,14 +54,14 @@ class MemberRepositoryTest {
     }
     @Test
     void 뮤넥터순위조회(){
-        for (int i=0;i<20;i++){
+        for (long i=0;i<20;i++){
             //int num = (int) Math.random();
             Member member = new Member("member" + i,i);
             em.persist(member);
         }
-        Member member11 = new Member("member", 19);
-        Member member191 = new Member("member", 19);
-        Member member15 = new Member("member", 15);
+        Member member11 = new Member("member", 19L);
+        Member member191 = new Member("member", 19L);
+        Member member15 = new Member("member", 15L);
         em.persist(member11);
         em.persist(member191);
         em.persist(member15);
@@ -74,10 +74,10 @@ class MemberRepositoryTest {
                         Projections.constructor(MemberRankRes.class,
                                 member.profileImage,
                                 member.name,
-                                member.allReplyCnt))
+                                member.all_replyCnt))
                 .from(member)
                // .where(member.status.eq('A'))
-                .orderBy(member.allReplyCnt.desc())
+                .orderBy(member.all_replyCnt.desc())
                 .limit(rank)
                 .fetch();
         assertThat(result.get(0).getAllReplyCnt()).isEqualTo(19);
