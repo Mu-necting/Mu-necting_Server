@@ -6,6 +6,7 @@ import com.munecting.server.domain.archive.dto.get.MapArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
 import com.munecting.server.domain.archive.service.ArchiveService;
 import com.munecting.server.global.config.BaseResponse;
+import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -47,4 +48,11 @@ public class ArchiveController {
     public BaseResponse<ArchiveDetailRes> getArchiveDetail(@PathVariable("archiveId")long id){
         return new BaseResponse<>(archiveService.findArchiveDetail(id));
     }
+    //아카이브 삭제
+    @ResponseBody
+    @PatchMapping("/{archiveId}")
+    public BaseResponse<BaseResponseStatus> changeArchiveStatus(@PathVariable("archiveId")long id){
+        return new BaseResponse<>(archiveService.changeArchiveStatus(id));
+    }
+
 }

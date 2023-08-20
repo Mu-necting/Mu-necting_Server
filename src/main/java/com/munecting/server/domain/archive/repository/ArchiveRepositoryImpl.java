@@ -28,7 +28,8 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
                         "a.musicId.artist,a.pickCnt) " +
                         " FROM Archive a "+
                         "where ST_Distance_Sphere(Point(:y,:x),Point(a.pointY,a.pointX)) <= :range " +
-                        "and a.endTime > now()",ArchiveRes.class)
+                        "and a.endTime > now() " +
+                        "and a.status = 'A' ",ArchiveRes.class)
                 .setParameter("x",x)
                 .setParameter("y",y)
                 .setParameter("range",range)
@@ -41,7 +42,8 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
                         " a.pointX , a.pointY,a.musicId.genre,a.musicId.name,a.musicId.artist )" +
                         "from Archive a "+
                         "where ST_Distance_Sphere(Point(:y,:x),Point(a.pointY,a.pointX)) <= :range " +
-                        "and a.endTime > now()"
+                        "and a.endTime > now() " +
+                                "and a.status = 'A' "
                 ,MapArchiveRes.class)
                 .setParameter("x",x)
                 .setParameter("y",y)
@@ -59,7 +61,7 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
                         archive.musicId.coverImg,
                         archive.id))
                 .from(archive)
-                .where(archive.memberId.eq(member))
+                .where(archive.memberId.eq(member),archive.status.eq('A'))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(archive.createAt.desc())
@@ -89,7 +91,7 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
                         archive.createAt
                 ))
                 .from(archive)
-                .where(archive.id.eq(id))
+                .where(archive.id.eq(id),archive.status.eq('A'))
                 .fetchOne();
     }
 }

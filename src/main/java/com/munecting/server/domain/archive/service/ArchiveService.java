@@ -11,6 +11,7 @@ import com.munecting.server.domain.member.repository.MemberRepository;
 import com.munecting.server.domain.music.dto.post.UploadMusicReq;
 import com.munecting.server.domain.music.entity.Music;
 import com.munecting.server.domain.music.repository.MusicRepository;
+import com.munecting.server.global.config.BaseResponseStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +62,12 @@ public class ArchiveService {
     // 아카이브 상세 조회
     public ArchiveDetailRes findArchiveDetail(long id){
         return archiveRepository.findArchiveDetailById(id);
+    }
+    //아카이브 삭제
+    @Transactional
+    public BaseResponseStatus changeArchiveStatus(long id){
+        Optional<Archive> findArchive = archiveRepository.findById(id);
+        findArchive.get().setStatus();
+        return BaseResponseStatus.SUCCESS;
     }
 }
