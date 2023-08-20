@@ -7,6 +7,7 @@ import com.munecting.server.domain.member.repository.MemberRepository;
 import com.munecting.server.domain.pick.dto.get.PickDetailRes;
 import com.munecting.server.domain.pick.dto.get.PicksPageRes;
 import com.munecting.server.domain.pick.dto.get.PicksRes;
+import com.munecting.server.domain.pick.dto.patch.PickChangeReq;
 import com.munecting.server.domain.pick.dto.post.PickReq;
 import com.munecting.server.domain.pick.entity.Pick;
 import com.munecting.server.domain.pick.repository.PickRepository;
@@ -50,6 +51,13 @@ public class PickService {
         Optional<Pick> findPick = pickRepository.findById(id);
         findPick.get().setStatus();
 
+        return BaseResponseStatus.SUCCESS;
+    }
+    //픽 수정
+    @Transactional
+    public BaseResponseStatus changePickWriting(PickChangeReq pickChangeReq){
+        Optional<Pick> findPick = pickRepository.findById(pickChangeReq.getId());
+        findPick.get().setWriting(pickChangeReq.getWriting());
         return BaseResponseStatus.SUCCESS;
     }
 }
