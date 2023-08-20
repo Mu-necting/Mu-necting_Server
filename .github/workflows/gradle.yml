@@ -42,7 +42,7 @@ jobs:
   
       # 압축파일 형태로 전달
       - name: Make zip file
-        run: zip -r -qq -j ./springboot-intro-build.zip ./deploy
+        run: zip -r -qq -j ./$GITHUB_SHA.zip ./deploy
   
       # S3 Bucket으로 copy
       - name: Deliver to AWS S3
@@ -52,7 +52,7 @@ jobs:
         run: |
           aws s3 cp \
           --region ${{ secrets.AWS_REGION }} \
-          --acl private \./springboot-intro-build.zip s3://${{ secrets.AWS_S3_BUCKET }}/
+          --acl private \./$GITHUB_SHA.zip s3://${{ secrets.AWS_S3_BUCKET }}/
       # Deploy
       - name: Deploy
         env:
@@ -63,7 +63,7 @@ jobs:
           --application-name munecting-code-deploy \
           --deployment-group-name munecting-server \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=springboot-intro-build,bundleType=zip,key=springboot-intro-build.zip \
+          --s3-location bucket=${{ secrets.AWS_S3_BUCKET }},bundleType=zip,key=$GITHUB_SHA.zip \
           --region ${{ secrets.AWS_REGION }}
           
       # uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
