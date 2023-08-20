@@ -1,36 +1,21 @@
 package com.munecting.server.domain.member.repository;
 
-import com.munecting.server.domain.archive.dto.get.ArchiveRes;
-import com.munecting.server.domain.member.DTO.get.MemberRankRes;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.pick.dto.post.PickReq;
-import com.munecting.server.domain.pick.entity.Pick;
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.sql.SQLExpressions;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.CollectionAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.munecting.server.domain.member.entity.QMember.member;
-import static com.querydsl.sql.SQLExpressions.denseRank;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Slf4j
 @Transactional
