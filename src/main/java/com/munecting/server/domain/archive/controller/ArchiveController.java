@@ -1,14 +1,17 @@
 package com.munecting.server.domain.archive.controller;
 
+import com.munecting.server.domain.archive.dto.get.ArchiveDetailRes;
 import com.munecting.server.domain.archive.dto.get.ArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MapArchiveRes;
 import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
 import com.munecting.server.domain.archive.service.ArchiveService;
 import com.munecting.server.global.config.BaseResponse;
+import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,4 +42,17 @@ public class ArchiveController {
     public BaseResponse<MapArchiveRes> getMapArchives(double x, double y, int range){
         return new BaseResponse(archiveService.findMapArchive(x,y,range));
     }
+    //아카이브 상세 조회
+    @ResponseBody
+    @GetMapping("/{archiveId}/detail")
+    public BaseResponse<ArchiveDetailRes> getArchiveDetail(@PathVariable("archiveId")long id){
+        return new BaseResponse<>(archiveService.findArchiveDetail(id));
+    }
+    //아카이브 삭제
+    @ResponseBody
+    @PatchMapping("/{archiveId}")
+    public BaseResponse<BaseResponseStatus> changeArchiveStatus(@PathVariable("archiveId")long id){
+        return new BaseResponse<>(archiveService.changeArchiveStatus(id));
+    }
+
 }

@@ -2,6 +2,7 @@ package com.munecting.server.domain.member.controller;
 
 import com.munecting.server.domain.member.DTO.ChangePwInfo;
 import com.munecting.server.domain.member.DTO.MemberDTO;
+import com.munecting.server.domain.member.DTO.get.MemberRankRes;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.member.service.LoginService;
 import com.munecting.server.domain.member.service.MemberService;
@@ -11,14 +12,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/members")
 public class MemberController {
 
     @Autowired
@@ -37,8 +40,9 @@ public class MemberController {
 
     // 유저 정보 수정
     @PostMapping("")
-    public BaseResponse<String> updateMyInfo(@RequestBody MemberDTO user, HttpServletRequest request) throws Exception {
-        memberService.updateMyInfo(user, request);
+    public BaseResponse<String> updateMyInfo(@RequestBody MemberDTO user, HttpServletRequest request,
+                                             @RequestPart("profile") MultipartFile profile) throws Exception {
+        memberService.updateMyInfo(user, request,profile);
         return new BaseResponse<>("정보가 수정되었습니다.");
     }
 
@@ -62,6 +66,11 @@ public class MemberController {
     public BaseResponse<Optional<Member>> deactivateUser(HttpServletRequest request) throws Exception {
         Optional<Member> userEntity = memberService.deactivateUser(request);
         return new BaseResponse<>(userEntity);
+    }
+    //뮤넥터 랭킹 조회
+    @GetMapping("/rank")
+    public BaseResponse<List<MemberRankRes>> getRank(int rank){
+        return new BaseResponse<>(memberService.findRankByMember(rank));
     }
 
 }
