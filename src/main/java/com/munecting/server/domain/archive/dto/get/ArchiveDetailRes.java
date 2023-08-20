@@ -17,5 +17,6 @@ public class ArchiveDetailRes {
     private String artist;
     private int replyCnt;
     private int pickCnt;
+    private String musicPre;
     private LocalDateTime createAt;
 }
