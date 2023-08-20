@@ -10,6 +10,8 @@ import com.munecting.server.domain.pick.dto.get.PicksRes;
 import com.munecting.server.domain.pick.dto.post.PickReq;
 import com.munecting.server.domain.pick.entity.Pick;
 import com.munecting.server.domain.pick.repository.PickRepository;
+import com.munecting.server.global.config.BaseResponse;
+import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,13 @@ public class PickService {
     //픽 상세 조회
     public PickDetailRes findPick(long pickId){
         return pickRepository.findPickDetail(pickId);
+    }
+    //픽 삭제
+    @Transactional
+    public BaseResponseStatus changePickStatus(long id){
+        Optional<Pick> findPick = pickRepository.findById(id);
+        findPick.get().setStatus();
+
+        return BaseResponseStatus.SUCCESS;
     }
 }
