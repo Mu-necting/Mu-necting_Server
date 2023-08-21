@@ -27,6 +27,10 @@ public class Member extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)// , generator = "user_sequence"
     private Long userIdx;
 
+    public Long getId() {
+        return userIdx;
+    }
+
     @Column(name = "email", nullable = true, unique = false)
     private String email;
 
@@ -55,10 +59,18 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(name = "login_cnt", nullable = true)
     private Long login_cnt;
 
+    @Column(name = "reply_total_cnt")
+    private Integer replyTotalCnt;
+    public void setReplyTotalCnt(int replyTotalCnt) {
+        this.replyTotalCnt = replyTotalCnt;
+    }
+
     @OneToMany(mappedBy = "memberId")
     private List<Archive> archives = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
-    private List<Reply> members = new ArrayList<>();
+    private List<Reply> replies = new ArrayList<>();
+
+
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()
@@ -112,4 +124,6 @@ public class Member extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+
 }
