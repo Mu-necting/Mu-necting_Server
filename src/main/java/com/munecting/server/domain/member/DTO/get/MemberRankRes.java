@@ -9,4 +9,5 @@ public class MemberRankRes {
     private String profile;
     private String nick;
     private long allReplyCnt;
+    private long rank;
 }

@@ -1,18 +1,17 @@
 package com.munecting.server.domain.pick.controller;
 
+import com.munecting.server.domain.pick.dto.get.PickDetailRes;
 import com.munecting.server.domain.pick.dto.get.PicksPageRes;
-import com.munecting.server.domain.pick.dto.get.PicksRes;
+import com.munecting.server.domain.pick.dto.patch.PickChangeReq;
 import com.munecting.server.domain.pick.dto.post.PickReq;
 import com.munecting.server.domain.pick.service.PickService;
 import com.munecting.server.global.config.BaseResponse;
 import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/pick")
@@ -32,5 +31,23 @@ public class PickController {
     public BaseResponse<PicksPageRes> getPicks(@PathVariable("memberId")long memberId,
                                                @PageableDefault(page=0, size=2)Pageable pageable){
         return new BaseResponse<>(pickService.findPicks(memberId,pageable));
+    }
+    //픽 상세 조회
+    @ResponseBody
+    @GetMapping("/{pickId}/detail")
+    public BaseResponse<PickDetailRes> getPickDetail(@PathVariable("pickId")long pickId){
+        return new BaseResponse<>(pickService.findPick(pickId));
+    }
+    //픽 삭제
+    @ResponseBody
+    @PatchMapping("/{pickId}")
+    public BaseResponse<BaseResponseStatus> changePickStatus(@PathVariable("pickId")long id){
+        return new BaseResponse<>(pickService.changePickStatus(id));
+    }
+    //픽 수정
+    @ResponseBody
+    @PatchMapping("/{pickId}/detail")
+    public BaseResponse<BaseResponseStatus> changePickWriting(@RequestBody PickChangeReq pickChangeReq){
+        return new BaseResponse<>(pickService.changePickWriting(pickChangeReq));
     }
 }

@@ -36,7 +36,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(name = "name", nullable = true)
     private String name;
 
-    @Column(name = "all_replyCnt", nullable = false)
+    @Column(name = "all_replyCnt", nullable = true)
     private Long all_replyCnt;
 
     @Column(name = "profileImage", nullable = true)
@@ -52,7 +52,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(name = "login_at", nullable = true)
     private LocalDateTime login_at;
 
-    @Column(name = "login_cnt", nullable = false)
+    @Column(name = "login_cnt", nullable = true)
     private Long login_cnt;
 
     @OneToMany(mappedBy = "memberId")
