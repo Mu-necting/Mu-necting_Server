@@ -1,6 +1,7 @@
 package com.munecting.server.domain.music.service;
-import com.munecting.server.domain.music.dto.get.YoutubeApiRes;
 
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.SearchListResponse;
 import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
 import com.munecting.server.domain.member.repository.MemberRepository;
@@ -19,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.enums.ModelObjectType;
@@ -34,6 +38,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.client.RestTemplate;
 import static java.util.Arrays.stream;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -68,6 +73,8 @@ public class MusicService {
         }
     }
     //아카이브 업로드
+
+
     @Transactional
     public void postMusicArchive(UploadMusicReq uploadMusicReq){
         musicRepository.postMusic(new Music(uploadMusicReq.getName(),uploadMusicReq.getCoverImg(),
@@ -75,78 +82,8 @@ public class MusicService {
     }
 
 
-    @Value("${youtube.apiKey}")
-    private String youtubeApiKey;
-
-    public String getYoutubeMusicLink(String music) {
-        RestTemplate restTemplate = new RestTemplate();
-        String apiUrl = "https://www.googleapis.com/youtube/v3/search";
-
-        try {
-            ResponseEntity<YoutubeApiRes> responseEntity = restTemplate.getForEntity(
-                    apiUrl + "?key=" + youtubeApiKey + "&q=" + music + "&type=video",
-                    YoutubeApiRes.class);
-
-            YoutubeApiRes apiResponse = responseEntity.getBody();
-
-            log.info("API Response: {}", apiResponse);
-
-            if (apiResponse != null && apiResponse.getItems() != null && !apiResponse.getItems().isEmpty()) {
-                String videoId = apiResponse.getItems().get(0).getVideoId();
-                log.info("Video ID: {}", videoId); // 추가: Video ID 확인
-                return "https://www.youtube.com/watch?v=" + videoId;
-            } else {
-                log.warn("YouTube API response is empty or null.");
-                return null;
-            }
-        } catch (Exception e) {
-            log.error("An error occurred while fetching YouTube link.", e);
-            return null;
-        }
-    }
-
-
-    /*
-    @Value("${youtube.apiKey}")
-    private String youtubeApiKey;
-    public String getYoutubeMusicLink(String music) {
-        RestTemplate restTemplate = new RestTemplate();
-        String apiUrl = "https://www.googleapis.com/youtube/v3/search";
-
-        // YouTube API 호출
-        ResponseEntity<YoutubeApiRes> responseEntity = restTemplate.getForEntity(
-                apiUrl + "?key=" + youtubeApiKey + "&q=" + music + "&type=video",
-                YoutubeApiRes.class);
-
-        YoutubeApiRes apiResponse = responseEntity.getBody();
-
-        if (apiResponse != null && apiResponse.getItems() != null && !apiResponse.getItems().isEmpty()) {
-
-            String videoId = apiResponse.getItems().get(0).getVideoId();
-            return "https://www.youtube.com/watch?v=" + videoId;
-        } else {
-            System.out.println("YouTube API response is empty or null.");
-            return null;
-        }
-    }
-
-
-
-    @Transactional
-    public void getAndSaveYoutubeLink(String musicName) {
-        String youtubeLink = getYoutubeMusicLink(musicName);
-        Long musicId = musicRepository.findMusicIdByName(musicName);
-        updateMusicFullLink(musicId, youtubeLink);
-    }
-    @Transactional
-    public void updateMusicFullLink(Long musicId, String youtubeLink) {
-        Music music = musicRepository.findById(musicId);
-        music.setMusicFull(youtubeLink);
-        musicRepository.postMusic(music);
-    }
-
-
-
-*/
 
 }
+
+
+

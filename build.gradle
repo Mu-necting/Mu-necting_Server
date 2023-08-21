@@ -33,6 +33,12 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev20230816-2.0.0'
+    implementation 'com.google.oauth-client:google-oauth-client:1.31.0'
+    implementation 'com.google.api-client:google-api-client:1.32.1'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     //spotify api
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
 }

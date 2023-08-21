@@ -22,6 +22,15 @@ public class MusicRepository {
                 .setParameter("id", id)
                 .getSingleResult();
     }
+    public Music findByNameAndArtist(String name, String artist) {
+        return em.createQuery("SELECT m FROM Music m WHERE m.name = :name AND m.artist = :artist", Music.class)
+                .setParameter("name", name)
+                .setParameter("artist", artist)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }
 
     public Long findMusicIdByName(String musicName) {
         return em.createQuery("SELECT m.id FROM Music m WHERE m.name = :musicName", Long.class)
