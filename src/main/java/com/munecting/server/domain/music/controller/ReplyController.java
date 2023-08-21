@@ -5,8 +5,10 @@ import com.munecting.server.domain.music.service.ReplyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/archives")
+@RequestMapping("/replies")
 public class ReplyController {
 
     private final ReplyService replyService;
@@ -15,20 +17,31 @@ public class ReplyController {
         this.replyService = replyService;
     }
 
-    @PostMapping("/{archiveId}/reply")
-    public ResponseEntity<String> createReply(@PathVariable Long archiveId, @RequestBody ReplyRequestDTO replyRequest) {
+    @PostMapping("/reply")
+    public ResponseEntity<String> createReply(@RequestParam Long archiveId, @RequestParam Long memberId) {
+        ReplyRequestDTO replyRequest = new ReplyRequestDTO();
+        replyRequest.setMemberId(memberId);
         replyService.reply(archiveId, replyRequest);
-
-        Long memberId = replyRequest.getMemberId();
-       // replyService.updateReplyTotalCnt(memberId);;
         replyService.updateReplyTotalCnt(archiveId);
         return ResponseEntity.ok("Replied");
     }
-    @GetMapping("/{archiveId}/reply-count")
-    public ResponseEntity<Integer> getReplyCount(@PathVariable Long archiveId) {
+
+
+    @GetMapping("/reply-count")
+    public ResponseEntity<Integer> getReplyCount(@RequestParam Long archiveId) {
         int replyCount = replyService.getReplyCount(archiveId);
         return ResponseEntity.ok(replyCount);
     }
 
+    @GetMapping("/ranking")
+    public ResponseEntity<List<String>> getRankedMembersByReplyTotalCnt() {
+        List<String> rankedMembersWithNames = replyService.getRankedMembersWithNames();
+        return ResponseEntity.ok(rankedMembersWithNames);
+    }
 
+    @PostMapping("/unreply")
+    public ResponseEntity<String> unreply(@RequestParam Long archiveId, @RequestParam Long memberId) {
+        replyService.unreply(archiveId, memberId);
+        return ResponseEntity.ok("Reply canceled");
+    }
 }

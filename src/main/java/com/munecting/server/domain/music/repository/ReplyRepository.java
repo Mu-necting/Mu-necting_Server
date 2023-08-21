@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
     boolean existsByMemberIdAndArchiveId(Member member, Archive archive);
     void deleteByMemberIdAndArchiveId(Member member, Archive archive);
     int countByMemberId(Member member);
+    Optional<Reply> findByMemberIdAndArchiveId(Member member, Archive archive);
 }

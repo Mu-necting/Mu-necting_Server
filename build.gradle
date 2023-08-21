@@ -19,6 +19,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://maven.google.com"
+    }
 }
 
 dependencies {

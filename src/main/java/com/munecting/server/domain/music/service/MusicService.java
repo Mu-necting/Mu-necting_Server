@@ -1,4 +1,5 @@
 package com.munecting.server.domain.music.service;
+import com.munecting.server.domain.music.dto.get.YoutubeApiRes;
 
 import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
@@ -9,11 +10,16 @@ import com.munecting.server.domain.music.dto.post.UploadMusicReq;
 import com.munecting.server.domain.music.entity.Music;
 import com.munecting.server.domain.music.repository.MusicRepository;
 import com.munecting.server.global.utils.spotify.TokenSpotify;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -22,11 +28,11 @@ import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
 import se.michaelthelin.spotify.requests.data.albums.GetAlbumRequest;
 import se.michaelthelin.spotify.requests.data.search.SearchItemRequest;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.springframework.web.client.RestTemplate;
 import static java.util.Arrays.stream;
 
 @Service
@@ -67,4 +73,80 @@ public class MusicService {
         musicRepository.postMusic(new Music(uploadMusicReq.getName(),uploadMusicReq.getCoverImg(),
                 uploadMusicReq.getMusicPre(),uploadMusicReq.getMusicPull(),uploadMusicReq.getGenre(),uploadMusicReq.getArtist()));
     }
+
+
+    @Value("${youtube.apiKey}")
+    private String youtubeApiKey;
+
+    public String getYoutubeMusicLink(String music) {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "https://www.googleapis.com/youtube/v3/search";
+
+        try {
+            ResponseEntity<YoutubeApiRes> responseEntity = restTemplate.getForEntity(
+                    apiUrl + "?key=" + youtubeApiKey + "&q=" + music + "&type=video",
+                    YoutubeApiRes.class);
+
+            YoutubeApiRes apiResponse = responseEntity.getBody();
+
+            log.info("API Response: {}", apiResponse);
+
+            if (apiResponse != null && apiResponse.getItems() != null && !apiResponse.getItems().isEmpty()) {
+                String videoId = apiResponse.getItems().get(0).getVideoId();
+                log.info("Video ID: {}", videoId); // 추가: Video ID 확인
+                return "https://www.youtube.com/watch?v=" + videoId;
+            } else {
+                log.warn("YouTube API response is empty or null.");
+                return null;
+            }
+        } catch (Exception e) {
+            log.error("An error occurred while fetching YouTube link.", e);
+            return null;
+        }
+    }
+
+
+    /*
+    @Value("${youtube.apiKey}")
+    private String youtubeApiKey;
+    public String getYoutubeMusicLink(String music) {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "https://www.googleapis.com/youtube/v3/search";
+
+        // YouTube API 호출
+        ResponseEntity<YoutubeApiRes> responseEntity = restTemplate.getForEntity(
+                apiUrl + "?key=" + youtubeApiKey + "&q=" + music + "&type=video",
+                YoutubeApiRes.class);
+
+        YoutubeApiRes apiResponse = responseEntity.getBody();
+
+        if (apiResponse != null && apiResponse.getItems() != null && !apiResponse.getItems().isEmpty()) {
+
+            String videoId = apiResponse.getItems().get(0).getVideoId();
+            return "https://www.youtube.com/watch?v=" + videoId;
+        } else {
+            System.out.println("YouTube API response is empty or null.");
+            return null;
+        }
+    }
+
+
+
+    @Transactional
+    public void getAndSaveYoutubeLink(String musicName) {
+        String youtubeLink = getYoutubeMusicLink(musicName);
+        Long musicId = musicRepository.findMusicIdByName(musicName);
+        updateMusicFullLink(musicId, youtubeLink);
+    }
+    @Transactional
+    public void updateMusicFullLink(Long musicId, String youtubeLink) {
+        Music music = musicRepository.findById(musicId);
+        music.setMusicFull(youtubeLink);
+        musicRepository.postMusic(music);
+    }
+
+
+
+*/
+
 }

@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Service
@@ -51,6 +53,7 @@ public class ReplyService {
         archiveRepository.postArchive(archive);
 
         updateReplyTotalCnt(member.getId());
+
     }
 
     @Transactional
@@ -80,7 +83,55 @@ public class ReplyService {
         return archive.getReplyCnt();
     }
 
+    @Transactional
+    public List<String> getRankedMembersWithNames() {
+        List<Member> rankedMembers = memberRepository.findAllByOrderByReplyTotalCntDesc();
+        int previousReplyTotalCnt = -1;
 
+        List<Integer> ranks = IntStream.rangeClosed(1, rankedMembers.size())
+                .mapToObj(rank -> {
+                    Member member = rankedMembers.get(rank - 1);
+                    int currentReplyTotalCnt = member.getReplyTotalCnt();
+
+                    if (currentReplyTotalCnt != previousReplyTotalCnt) {
+                        return rank;
+                    } else {
+                        return rank - 1;
+                    }
+                })
+                .collect(Collectors.toList());
+
+        return IntStream.range(0, rankedMembers.size())
+                .mapToObj(i -> {
+                    Member member = rankedMembers.get(i);
+                    int rank = ranks.get(i);
+                    String rankInfo = rank + "위: " + member.getNickname();
+                    if (i > 0 && ranks.get(i) == ranks.get(i - 1)) {
+                        rankInfo += " (동일 랭킹)";
+                    }
+                    return rankInfo;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void unreply(Long archiveId, Long memberId) {
+        Archive archive = archiveRepository.findById(archiveId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new DataRetrievalFailureException("Member not found with id: " + memberId));
+
+        Reply reply = replyRepository.findByMemberIdAndArchiveId(member, archive)
+                .orElseThrow(() -> new DataRetrievalFailureException("Reply not found for member and archive"));
+
+        // Reply 삭제
+        replyRepository.delete(reply);
+
+        // archive의 replyCnt 감소
+        archive.decreaseReplyCnt();
+        archiveRepository.postArchive(archive);
+
+        updateReplyTotalCnt(member.getId());
+    }
 
 }
 
