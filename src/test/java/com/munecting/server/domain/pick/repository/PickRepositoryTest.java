@@ -8,9 +8,11 @@ import com.munecting.server.domain.music.dto.post.UploadMusicReq;
 import com.munecting.server.domain.music.entity.Music;
 import com.munecting.server.domain.music.entity.MusicGenre;
 import com.munecting.server.domain.music.service.MusicService;
+import com.munecting.server.domain.pick.dto.get.PickDetailRes;
 import com.munecting.server.domain.pick.dto.get.PicksPageRes;
 import com.munecting.server.domain.pick.dto.get.PicksRes;
 import com.munecting.server.domain.pick.entity.Pick;
+import com.munecting.server.domain.pick.entity.QPick;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.Entity;
@@ -95,5 +97,23 @@ class PickRepositoryTest {
         PicksPageRes picksPageRes = new PicksPageRes(picksRes, totalCnt-1);
         log.info("picksPageRes : "+picksPageRes);
         log.info("totalCnt:"+totalCnt);
+    }
+    @Test
+    void 픽상세조회(){
+        long id = 1;
+        Pick pick = em.find(Pick.class, id);
+
+        PickDetailRes result = queryFactory
+                .select(Projections.constructor(PickDetailRes.class,
+                        QPick.pick.archiveId.musicId.name,
+                        QPick.pick.archiveId.musicId.artist,
+                        QPick.pick.createAt,
+                        QPick.pick.archiveId.musicId.coverImg,
+                        QPick.pick.writing,
+                        QPick.pick.id))
+                .from(QPick.pick)
+                .where(QPick.pick.id.eq(id))
+                .fetchOne();
+        log.info("id",result);
     }
 }
