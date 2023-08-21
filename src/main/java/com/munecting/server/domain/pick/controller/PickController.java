@@ -2,6 +2,7 @@ package com.munecting.server.domain.pick.controller;
 
 import com.munecting.server.domain.pick.dto.get.PickDetailRes;
 import com.munecting.server.domain.pick.dto.get.PicksPageRes;
+import com.munecting.server.domain.pick.dto.patch.PickChangeReq;
 import com.munecting.server.domain.pick.dto.post.PickReq;
 import com.munecting.server.domain.pick.service.PickService;
 import com.munecting.server.global.config.BaseResponse;
@@ -9,6 +10,7 @@ import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,5 +43,11 @@ public class PickController {
     @PatchMapping("/{pickId}")
     public BaseResponse<BaseResponseStatus> changePickStatus(@PathVariable("pickId")long id){
         return new BaseResponse<>(pickService.changePickStatus(id));
+    }
+    //픽 수정
+    @ResponseBody
+    @PatchMapping("/{pickId}/detail")
+    public BaseResponse<BaseResponseStatus> changePickWriting(@RequestBody PickChangeReq pickChangeReq){
+        return new BaseResponse<>(pickService.changePickWriting(pickChangeReq));
     }
 }

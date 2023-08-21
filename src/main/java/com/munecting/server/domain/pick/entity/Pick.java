@@ -34,4 +34,7 @@ public class Pick extends BaseEntity {
     public void setStatus(){
         this.status = 'D';
     }
+    public void setWriting(String writing){
+        this.writing = writing;
+    }
 }
