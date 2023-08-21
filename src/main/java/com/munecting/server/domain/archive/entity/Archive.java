@@ -36,6 +36,16 @@ public class Archive extends BaseEntity {
     private double pointY;
     private int replyCnt;
     private int pickCnt;
+    public int getReplyCnt() {
+        return replyCnt;
+    }
+
+    public void increaseReplyCnt() {
+        this.replyCnt++;
+    }
+    public void decreaseReplyCnt() {
+        this.replyCnt--;
+    }
     private LocalDateTime endTime;
     private char status = 'A';
     @OneToMany(mappedBy = "archiveId")
@@ -66,4 +76,5 @@ public class Archive extends BaseEntity {
     public Archive(Member memberId){
         this.memberId = memberId;
     }
+
 }
