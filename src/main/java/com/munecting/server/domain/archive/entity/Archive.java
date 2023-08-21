@@ -37,7 +37,7 @@ public class Archive extends BaseEntity {
     private int replyCnt;
     private int pickCnt;
     private LocalDateTime endTime;
-    private String status = "ACTIVE";
+    private char status = 'A';
     @OneToMany(mappedBy = "archiveId")
     @ToString.Exclude
     private List<Reply> replies = new ArrayList<>();
@@ -54,6 +54,9 @@ public class Archive extends BaseEntity {
     //setter
     public void setPickCnt(){
         this.pickCnt +=1;
+    }
+    public void setStatus(){
+        this.status = 'D';
     }
     //test용
     public Archive(Member memberId,Music musicId){

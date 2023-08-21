@@ -4,11 +4,14 @@ import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.member.repository.MemberRepository;
+import com.munecting.server.domain.pick.dto.get.PickDetailRes;
 import com.munecting.server.domain.pick.dto.get.PicksPageRes;
 import com.munecting.server.domain.pick.dto.get.PicksRes;
 import com.munecting.server.domain.pick.dto.post.PickReq;
 import com.munecting.server.domain.pick.entity.Pick;
 import com.munecting.server.domain.pick.repository.PickRepository;
+import com.munecting.server.global.config.BaseResponse;
+import com.munecting.server.global.config.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,5 +39,17 @@ public class PickService {
     public PicksPageRes findPicks(long memberId, Pageable pageable){
         Optional<Member> findMember = memberRepository.findById(memberId);
         return pickRepository.findPicksByMember(findMember.get(),pageable);
+    }
+    //픽 상세 조회
+    public PickDetailRes findPick(long pickId){
+        return pickRepository.findPickDetail(pickId);
+    }
+    //픽 삭제
+    @Transactional
+    public BaseResponseStatus changePickStatus(long id){
+        Optional<Pick> findPick = pickRepository.findById(id);
+        findPick.get().setStatus();
+
+        return BaseResponseStatus.SUCCESS;
     }
 }
