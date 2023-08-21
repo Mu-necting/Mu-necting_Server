@@ -4,7 +4,6 @@ files:
   - source:  /
     destination: /home/ubuntu/munecting
     overwrite: yes
-file_exists_behavior: OVERWRITE
 
 permissions:
   - object: /
@@ -13,7 +12,11 @@ permissions:
     group: ubuntu
 
 hooks:
+  AfterInstall:
+    - location: scripts/stop.sh
+      timeout: 60
+      runas: ec2-user
   ApplicationStart:
     - location: scripts/start.sh
-      timeout: 120
-      runas: ubuntu
+      timeout: 60
+      runas: ec2-user
