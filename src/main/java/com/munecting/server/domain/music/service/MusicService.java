@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,16 +46,15 @@ import static java.util.Arrays.stream;
 @Slf4j
 public class MusicService {
     private final MusicRepository musicRepository;
-    private final ArchiveRepository archiveRepository;
-    private final MemberRepository memberRepository;
-
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-            .setAccessToken(TokenSpotify.accessToken())
-            .build();
+    @Autowired
+    private TokenSpotify tokenSpotify;
 
     //음악 검색
     public MusicSearchPageRes getMusicSearch(String search,int page){
         try {
+            SpotifyApi spotifyApi = new SpotifyApi.Builder()
+                    .setAccessToken(tokenSpotify.accessToken())
+                    .build();
             SearchItemRequest searchItemRequest = spotifyApi.searchItem(search, ModelObjectType.TRACK.getType())
                     .offset(page*20)
                     .build();
@@ -64,7 +63,8 @@ public class MusicService {
             return new MusicSearchPageRes(stream(searchResult.getTracks().getItems())
                     .map(track -> {
                         AlbumSimplified album = track.getAlbum();
-                        return new MusicSearchRes(album.getName(), album.getArtists()[0].getName(), album.getImages()[0].getUrl());
+                        return new MusicSearchRes(album.getName(), album.getArtists()[0].getName(), album.getImages()[0].getUrl(),
+                                track.getPreviewUrl());
                     })
                     .collect(Collectors.toList()),
                     totalPage-1);
@@ -76,14 +76,11 @@ public class MusicService {
 
 
     @Transactional
-    public void postMusicArchive(UploadMusicReq uploadMusicReq){
-        musicRepository.postMusic(new Music(uploadMusicReq.getName(),uploadMusicReq.getCoverImg(),
-                uploadMusicReq.getMusicPre(),uploadMusicReq.getMusicPull(),uploadMusicReq.getGenre(),uploadMusicReq.getArtist()));
+    public Music saveMusic(UploadMusicReq uploadMusicReq){
+        return musicRepository.save(new Music(uploadMusicReq.getName(), uploadMusicReq.getCoverImg(),
+                uploadMusicReq.getMusicPre(), uploadMusicReq.getMusicPull(), uploadMusicReq.getGenre(), uploadMusicReq.getArtist()));
     }
 
 
 
 }
-
-
-

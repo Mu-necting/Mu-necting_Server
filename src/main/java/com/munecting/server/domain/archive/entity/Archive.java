@@ -8,8 +8,10 @@ import com.munecting.server.domain.reply.entity.Reply;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,15 +26,16 @@ public class Archive extends BaseEntity {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @ToString.Exclude
     private Member memberId;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
+    @ToString.Exclude
     private Music musicId;
-    @Column(name = "point_x")
-    private float pointX;   //(x,y) 좌표
-    @Column(name = "point_y")
-    private float pointY;
+    private double pointX;   //(x,y) 좌표
+    private double pointY;
     private int replyCnt;
+    private int pickCnt;
     public int getReplyCnt() {
         return replyCnt;
     }
@@ -44,17 +47,34 @@ public class Archive extends BaseEntity {
         this.replyCnt--;
     }
     private LocalDateTime endTime;
-    private String status = "ACTIVE";
+    private char status = 'A';
     @OneToMany(mappedBy = "archiveId")
+    @ToString.Exclude
     private List<Reply> replies = new ArrayList<>();
     @OneToMany(mappedBy = "archiveId")
+    @ToString.Exclude
     private List<Pick> picks = new ArrayList<>();
-    public Archive(Member memberId,Music musicId,float pointX,float pointY,LocalDateTime endTime){
+    public Archive(Member memberId,Music musicId,double pointX,double pointY,LocalDateTime endTime){
         this.memberId = memberId;
         this.musicId = musicId;
         this.pointX = pointX;
         this.pointY = pointY;
         this.endTime = endTime;
+    }
+    //setter
+    public void setPickCnt(){
+        this.pickCnt +=1;
+    }
+    public void setStatus(){
+        this.status = 'D';
+    }
+    //test용
+    public Archive(Member memberId,Music musicId){
+        this.memberId = memberId;
+        this.musicId = musicId;
+    }
+    public Archive(Member memberId){
+        this.memberId = memberId;
     }
 
 }

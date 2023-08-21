@@ -25,22 +25,63 @@ repositories {
 }
 
 dependencies {
+    // Spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.jetbrains:annotations:23.0.0'
+
+    // Lombok
+    testImplementation 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    //youtube
     implementation 'com.google.apis:google-api-services-youtube:v3-rev20230816-2.0.0'
     implementation 'com.google.oauth-client:google-oauth-client:1.31.0'
     implementation 'com.google.api-client:google-api-client:1.32.1'
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    // Spring security
+    implementation 'org.springframework.security:spring-security-core'
+    implementation group: 'org.springframework.security', name: 'spring-security-messaging', version: '5.6.2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // JWT
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // email 관련
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // OAuth
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+
+    // JSON
+    implementation 'org.json:json:20210307'
+
     //spotify api
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
+
+    //queryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    //log남기기
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
+    //aws
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 //spotify api
 allprojects {
@@ -51,4 +92,21 @@ allprojects {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+// Querydsl 설정부
+def generated = 'src/main/generated'
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [ generated ]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
 }

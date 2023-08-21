@@ -5,10 +5,12 @@ import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "pick")
+@NoArgsConstructor
 public class Pick extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +23,18 @@ public class Pick extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "archive_id")
     private Archive archiveId;
-    private String status;
+    private char status='A';
+
+    public Pick(String writing, Member memberId, Archive archiveId) {
+        this.writing = writing;
+        this.memberId = memberId;
+        this.archiveId = archiveId;
+    }
+    //setter
+    public void setStatus(){
+        this.status = 'D';
+    }
+    public void setWriting(String writing){
+        this.writing = writing;
+    }
 }
