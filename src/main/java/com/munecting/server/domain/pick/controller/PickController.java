@@ -47,7 +47,7 @@ public class PickController {
     //픽 수정
     @ResponseBody
     @PatchMapping("/{pickId}/detail")
-    public BaseResponse<BaseResponseStatus> changePickWriting(PickChangeReq pickChangeReq){
+    public BaseResponse<BaseResponseStatus> changePickWriting(@RequestBody PickChangeReq pickChangeReq){
         return new BaseResponse<>(pickService.changePickWriting(pickChangeReq));
     }
 }
