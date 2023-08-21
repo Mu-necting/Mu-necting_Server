@@ -85,6 +85,7 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
                         archive.musicId.artist,
                         archive.replyCnt,
                         archive.pickCnt,
+                        archive.musicId.musicPre,
                         archive.createAt
                 ))
                 .from(archive)
