@@ -15,6 +15,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -34,7 +35,8 @@ import java.util.List;
 public class MusicController {
     private final MusicService musicService;
     private final ArchiveService archiveService;
-    private final YoutubeService youtubeService;
+    @Autowired
+    private YoutubeService youtubeService;
 
     //음악 검색
     @ResponseBody

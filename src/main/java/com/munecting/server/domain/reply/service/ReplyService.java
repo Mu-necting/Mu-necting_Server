@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,17 +32,17 @@ public class ReplyService {
     @Transactional
     public void reply(Long archiveId, ReplyRequestDTO replyRequest) {
         Long memberId = replyRequest.getMemberId();
-        Member member = memberRepository.findByIdMember(memberId);
+        Optional<Member> member = memberRepository.findById(memberId);
 
         Archive archive = archiveRepository.findArchiveById(archiveId);
 
         //중복 방지
-        if (replyRepository.existsByMemberIdAndArchiveId(member, archive)) {
+        if (replyRepository.existsByMemberIdAndArchiveId(member.get(), archive)) {
             throw new IllegalArgumentException("Reply already exists.");
         }
 
         Reply reply = new Reply();
-        reply.setMemberId(member);
+        reply.setMemberId(member.get());
         reply.setStatus("REPLIED");
         reply.setArchiveId(archive);
 
@@ -50,7 +51,7 @@ public class ReplyService {
         archive.increaseReplyCnt(); // replyCnt 증가
         archiveRepository.save(archive);
 
-        updateReplyTotalCnt(member.getId());
+        updateReplyTotalCnt(member.get().getId());
 
     }
 
@@ -59,15 +60,15 @@ public class ReplyService {
         Archive archive = archiveRepository.findArchiveById(archiveId);
 
         Long memberId = archive.getMemberId().getId();
-        Member member = memberRepository.findByIdMember(memberId);
+        Optional<Member> member = memberRepository.findById(memberId);
 
-        List<Archive> archivesWithSameMember = archiveRepository.findAllByMemberId(member);
+        List<Archive> archivesWithSameMember = archiveRepository.findAllByMemberId(member.get());
         int replyTotalCnt = archivesWithSameMember.stream()
                 .mapToInt(Archive::getReplyCnt)
                 .sum();
 
-        member.setReplyTotalCnt(replyTotalCnt);
-        memberRepository.save(member);
+        member.get().setReplyTotalCnt(replyTotalCnt);
+        memberRepository.save(member.get());
     }
 
 //reply 개수 조회
@@ -84,10 +85,10 @@ public class ReplyService {
     @Transactional
     public void unreply(Long archiveId, Long memberId) {
         Archive archive = archiveRepository.findArchiveById(archiveId);
-        Member member = memberRepository.findByIdMember(memberId);
+        Optional<Member> member = memberRepository.findById(memberId);
 
 
-        Reply reply = replyRepository.findByMemberIdAndArchiveId(member, archive)
+        Reply reply = replyRepository.findByMemberIdAndArchiveId(member.get(), archive)
                 .orElseThrow(() -> new DataRetrievalFailureException("Reply not found for member and archive"));
 
         // Reply 삭제
@@ -97,7 +98,7 @@ public class ReplyService {
         archive.decreaseReplyCnt();
         archiveRepository.save(archive);
 
-        updateReplyTotalCnt(member.getId());
+        updateReplyTotalCnt(member.get().getId());
     }
 
 }
