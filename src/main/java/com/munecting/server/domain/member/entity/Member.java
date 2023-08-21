@@ -27,6 +27,10 @@ public class Member extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)// , generator = "user_sequence"
     private Long userIdx;
 
+    public Long getId() {
+        return userIdx;
+    }
+
     @Column(name = "email", nullable = true, unique = false)
     private String email;
 

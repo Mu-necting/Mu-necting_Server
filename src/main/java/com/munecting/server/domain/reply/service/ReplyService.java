@@ -33,7 +33,7 @@ public class ReplyService {
         Long memberId = replyRequest.getMemberId();
         Member member = memberRepository.findByIdMember(memberId);
 
-        Archive archive = archiveRepository.findById(archiveId);
+        Archive archive = archiveRepository.findArchiveById(archiveId);
 
         //중복 방지
         if (replyRepository.existsByMemberIdAndArchiveId(member, archive)) {
@@ -48,7 +48,7 @@ public class ReplyService {
         // Reply 저장
         replyRepository.save(reply);
         archive.increaseReplyCnt(); // replyCnt 증가
-        archiveRepository.postArchive(archive);
+        archiveRepository.save(archive);
 
         updateReplyTotalCnt(member.getId());
 
@@ -56,7 +56,7 @@ public class ReplyService {
 
     @Transactional
     public void updateReplyTotalCnt(Long archiveId) {
-        Archive archive = archiveRepository.findById(archiveId);
+        Archive archive = archiveRepository.findArchiveById(archiveId);
 
         Long memberId = archive.getMemberId().getId();
         Member member = memberRepository.findByIdMember(memberId);
@@ -67,13 +67,13 @@ public class ReplyService {
                 .sum();
 
         member.setReplyTotalCnt(replyTotalCnt);
-        memberRepository.postMember(member);
+        memberRepository.save(member);
     }
 
 //reply 개수 조회
 @Transactional
     public int getReplyCount(Long archiveId) {
-        Archive archive = archiveRepository.findById(archiveId);
+        Archive archive = archiveRepository.findArchiveById(archiveId);
         if (archive == null) {
             throw new DataRetrievalFailureException("Archive not found with id: " + archiveId);
         }
@@ -83,7 +83,7 @@ public class ReplyService {
 
     @Transactional
     public void unreply(Long archiveId, Long memberId) {
-        Archive archive = archiveRepository.findById(archiveId);
+        Archive archive = archiveRepository.findArchiveById(archiveId);
         Member member = memberRepository.findByIdMember(memberId);
 
 
@@ -95,7 +95,7 @@ public class ReplyService {
 
         // archive의 replyCnt 감소
         archive.decreaseReplyCnt();
-        archiveRepository.postArchive(archive);
+        archiveRepository.save(archive);
 
         updateReplyTotalCnt(member.getId());
     }
