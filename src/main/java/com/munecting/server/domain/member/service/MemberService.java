@@ -49,6 +49,11 @@ public class MemberService {
 
     public Optional<Member> updateMyInfo(MemberDTO user, HttpServletRequest request,
                                          MultipartFile profile) throws Exception {
+
+
+        String email = jwtTokenProvider.getCurrentUser(request);
+        Member userEntity = memberRepository.findByEmail(email).orElse(null);
+
         String saveFilePath = null;
         if(!profile.isEmpty()) {  // 기본 프로필 아니면
             String fileName = "image" + File.separator + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
@@ -60,22 +65,18 @@ public class MemberService {
 
             // 이미지 업로드 : 이걸 DB에 저장하면 됩니다!
             saveFilePath = uploadImageS3.upload(profile, fileName, saveFileName);
+
+            userEntity.setProfileImage(saveFilePath);
         }
 
-        String email = jwtTokenProvider.getCurrentUser(request);
-        Member userEntity = memberRepository.findByEmail(email).orElse(null);
         if (userEntity == null) {
             throw new Exception("사용자를 찾을 수 없습니다.");
         }
         if (user.getName() != null) {
             userEntity.setName(user.getName());
         }
-        if (user.getProfileImage() != null) {
-            userEntity.setProfileImage(user.getProfileImage());
-        }
 
         return Optional.of(memberRepository.saveAndFlush(userEntity));
-
     }
 
     public Optional<Member> deactivateUser(HttpServletRequest request) throws Exception {
