@@ -1,4 +1,4 @@
-package com.munecting.server.domain.music.repository;
+package com.munecting.server.domain.reply.repository;
 import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.reply.entity.Reply;

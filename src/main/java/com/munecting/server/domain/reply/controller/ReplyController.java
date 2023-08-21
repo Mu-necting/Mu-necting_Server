@@ -1,7 +1,7 @@
-package com.munecting.server.domain.music.controller;
+package com.munecting.server.domain.reply.controller;
 
-import com.munecting.server.domain.music.dto.post.ReplyRequestDTO;
-import com.munecting.server.domain.music.service.ReplyService;
+import com.munecting.server.domain.reply.dto.post.ReplyRequestDTO;
+import com.munecting.server.domain.reply.service.ReplyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,11 +33,6 @@ public class ReplyController {
         return ResponseEntity.ok(replyCount);
     }
 
-    @GetMapping("/ranking")
-    public ResponseEntity<List<String>> getRankedMembersByReplyTotalCnt() {
-        List<String> rankedMembersWithNames = replyService.getRankedMembersWithNames();
-        return ResponseEntity.ok(rankedMembersWithNames);
-    }
 
     @PostMapping("/unreply")
     public ResponseEntity<String> unreply(@RequestParam Long archiveId, @RequestParam Long memberId) {

@@ -1,18 +1,16 @@
-package com.munecting.server.domain.music.service;
+package com.munecting.server.domain.reply.service;
 import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
 import com.munecting.server.domain.member.entity.Member;
 import com.munecting.server.domain.reply.entity.Reply;
-import com.munecting.server.domain.music.repository.ReplyRepository;
+import com.munecting.server.domain.reply.repository.ReplyRepository;
 import com.munecting.server.domain.member.repository.MemberRepository;
-import com.munecting.server.domain.music.dto.post.ReplyRequestDTO;
+import com.munecting.server.domain.reply.dto.post.ReplyRequestDTO;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,8 +31,8 @@ public class ReplyService {
     @Transactional
     public void reply(Long archiveId, ReplyRequestDTO replyRequest) {
         Long memberId = replyRequest.getMemberId();
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new DataRetrievalFailureException("Member not found with id: " + memberId));
+        Member member = memberRepository.findByIdMember(memberId);
+
         Archive archive = archiveRepository.findById(archiveId);
 
         //중복 방지
@@ -61,8 +59,7 @@ public class ReplyService {
         Archive archive = archiveRepository.findById(archiveId);
 
         Long memberId = archive.getMemberId().getId();
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new DataRetrievalFailureException("Member not found with id: " + memberId));
+        Member member = memberRepository.findByIdMember(memberId);
 
         List<Archive> archivesWithSameMember = archiveRepository.findAllByMemberId(member);
         int replyTotalCnt = archivesWithSameMember.stream()
@@ -70,7 +67,7 @@ public class ReplyService {
                 .sum();
 
         member.setReplyTotalCnt(replyTotalCnt);
-        memberRepository.save(member);
+        memberRepository.postMember(member);
     }
 
 //reply 개수 조회
@@ -83,42 +80,12 @@ public class ReplyService {
         return archive.getReplyCnt();
     }
 
-    @Transactional
-    public List<String> getRankedMembersWithNames() {
-        List<Member> rankedMembers = memberRepository.findAllByOrderByReplyTotalCntDesc();
-        int previousReplyTotalCnt = -1;
-
-        List<Integer> ranks = IntStream.rangeClosed(1, rankedMembers.size())
-                .mapToObj(rank -> {
-                    Member member = rankedMembers.get(rank - 1);
-                    int currentReplyTotalCnt = member.getReplyTotalCnt();
-
-                    if (currentReplyTotalCnt != previousReplyTotalCnt) {
-                        return rank;
-                    } else {
-                        return rank - 1;
-                    }
-                })
-                .collect(Collectors.toList());
-
-        return IntStream.range(0, rankedMembers.size())
-                .mapToObj(i -> {
-                    Member member = rankedMembers.get(i);
-                    int rank = ranks.get(i);
-                    String rankInfo = rank + "위: " + member.getNickname();
-                    if (i > 0 && ranks.get(i) == ranks.get(i - 1)) {
-                        rankInfo += " (동일 랭킹)";
-                    }
-                    return rankInfo;
-                })
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     public void unreply(Long archiveId, Long memberId) {
         Archive archive = archiveRepository.findById(archiveId);
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new DataRetrievalFailureException("Member not found with id: " + memberId));
+        Member member = memberRepository.findByIdMember(memberId);
+
 
         Reply reply = replyRepository.findByMemberIdAndArchiveId(member, archive)
                 .orElseThrow(() -> new DataRetrievalFailureException("Reply not found for member and archive"));

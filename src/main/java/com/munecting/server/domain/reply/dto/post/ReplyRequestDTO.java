@@ -1,4 +1,4 @@
-package com.munecting.server.domain.music.dto.post;
+package com.munecting.server.domain.reply.dto.post;
 import com.munecting.server.domain.member.entity.Member;
 
 public class ReplyRequestDTO {
