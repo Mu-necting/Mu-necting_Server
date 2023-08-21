@@ -30,7 +30,7 @@ public class PickRepositoryImpl implements PickRepositoryCustom{
                         pick.archiveId.musicId.coverImg,
                         pick.id))
                 .from(pick)
-                .where(pick.memberId.eq(member))
+                .where(pick.memberId.eq(member),pick.status.eq('A'))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(pick.createAt.desc())
@@ -38,7 +38,7 @@ public class PickRepositoryImpl implements PickRepositoryCustom{
         long totalCnt = queryFactory
                 .select(pick.archiveId.musicId.coverImg.count())
                 .from(pick)
-                .where(pick.memberId.eq(member))
+                .where(pick.memberId.eq(member),pick.status.eq('A'))
                 .fetchOne();
         totalCnt = totalCnt/2+(totalCnt%2==0?0:1);
         return new PicksPageRes(picksRes,totalCnt-1);

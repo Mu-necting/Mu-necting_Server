@@ -23,11 +23,15 @@ public class Pick extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "archive_id")
     private Archive archiveId;
-    private String status="ACTIVE";
+    private char status='A';
 
     public Pick(String writing, Member memberId, Archive archiveId) {
         this.writing = writing;
         this.memberId = memberId;
         this.archiveId = archiveId;
+    }
+    //setter
+    public void setStatus(){
+        this.status = 'D';
     }
 }

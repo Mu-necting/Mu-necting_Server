@@ -36,4 +36,10 @@ public class PickController {
     public BaseResponse<PickDetailRes> getPickDetail(@PathVariable("pickId")long pickId){
         return new BaseResponse<>(pickService.findPick(pickId));
     }
+    //픽 삭제
+    @ResponseBody
+    @PatchMapping("/{pickId}")
+    public BaseResponse<BaseResponseStatus> changePickStatus(@PathVariable("pickId")long id){
+        return new BaseResponse<>(pickService.changePickStatus(id));
+    }
 }
