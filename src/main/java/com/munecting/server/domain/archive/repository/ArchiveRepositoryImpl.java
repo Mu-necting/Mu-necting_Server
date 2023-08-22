@@ -24,7 +24,7 @@ public class ArchiveRepositoryImpl implements ArchiveRepositoryCustom{
     //주변 아카이브
     @Override
     public List<ArchiveRes> findNearArchive(double x,double y,int range){
-        return em.createQuery("SELECT new com.munecting.server.domain.archive.dto.get.ArchiveRes(a.musicId.name,a.musicId.coverImg,a.musicId.genre,a.musicId.musicPre,a.musicId.musicPull,a.replyCnt,a.id," +
+        return em.createQuery("SELECT new com.munecting.server.domain.archive.dto.get.ArchiveRes(a.musicId.name,a.musicId.coverImg,a.musicId.genre,a.musicId.musicPre,a.musicId.musicFull,a.replyCnt,a.id," +
                         "a.musicId.artist,a.pickCnt) " +
                         " FROM Archive a "+
                         "where ST_Distance_Sphere(Point(:y,:x),Point(a.pointY,a.pointX)) <= :range " +
