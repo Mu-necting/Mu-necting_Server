@@ -13,6 +13,7 @@ import com.munecting.server.global.config.BaseResponse;
 import com.munecting.server.global.config.BaseResponseStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.List;
-
 @RestController
 @RequestMapping("/musics")
 @RequiredArgsConstructor
@@ -35,8 +30,8 @@ import java.util.List;
 public class MusicController {
     private final MusicService musicService;
     private final ArchiveService archiveService;
-    @Autowired
-    private YoutubeService youtubeService;
+
+    private final YoutubeService youtubeService;
 
     //음악 검색
     @ResponseBody
@@ -46,10 +41,9 @@ public class MusicController {
     }
     //아카이브 업로드
     @ResponseBody
-    @Transactional
     @PostMapping("")
-    public BaseResponse postMusicArchive(@RequestBody UploadMusicReq uploadMusicReq){
-        archiveService.saveArchive(uploadMusicReq,musicService.saveMusic(uploadMusicReq));
+    public BaseResponse postMusicArchive(@RequestBody UploadMusicReq uploadMusicReq, HttpServletRequest memberId) throws Exception{
+        archiveService.saveArchive(uploadMusicReq,musicService.saveMusic(uploadMusicReq),memberId);
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 

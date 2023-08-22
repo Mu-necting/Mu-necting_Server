@@ -12,10 +12,13 @@ import com.munecting.server.domain.music.dto.post.UploadMusicReq;
 import com.munecting.server.domain.music.entity.Music;
 import com.munecting.server.domain.music.repository.MusicRepository;
 import com.munecting.server.global.config.BaseResponseStatus;
+import com.munecting.server.global.config.secure.JWT.JwtTokenProvider;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -32,14 +35,16 @@ import java.util.Optional;
 public class ArchiveService {
     private final ArchiveRepository archiveRepository;
     private final MemberRepository memberRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     //아카이브 저장
     @Transactional
-    public void saveArchive(UploadMusicReq uploadMusicReq, Music music) {
+    public void saveArchive(UploadMusicReq uploadMusicReq, Music music,HttpServletRequest memberId) throws Exception {
         memberRepository.save(new Member("member1"));
 
         LocalDateTime endTime = LocalDateTime.now().plusHours(uploadMusicReq.getPlusTime());
-        Optional<Member> findMember = memberRepository.findById((long) uploadMusicReq.getMemberId());
+        Optional<Member> findMember = memberRepository.findByEmail(jwtTokenProvider.getCurrentUser(memberId));
         archiveRepository.save(
                 new Archive(findMember.get(),music,uploadMusicReq.getPointX(), uploadMusicReq.getPointY(),
                         endTime)
@@ -51,8 +56,8 @@ public class ArchiveService {
         return archiveRepository.findNearArchive(x, y, range);
     }
     //내가 없로드한 아카이브 조회
-    public MyArchivePageRes findArchiveByMember(long memberId, Pageable pageable){
-        Optional<Member> findMember = memberRepository.findById(memberId);
+    public MyArchivePageRes findArchiveByMember(HttpServletRequest request, Pageable pageable) throws Exception {
+        Optional<Member> findMember = memberRepository.findByEmail(jwtTokenProvider.getCurrentUser(request));
         return archiveRepository.findArchiveByMember(findMember.get(),pageable);
     }
     // 맵 아카이브 조회

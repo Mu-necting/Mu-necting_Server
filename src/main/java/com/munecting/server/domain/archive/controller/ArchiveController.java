@@ -7,6 +7,7 @@ import com.munecting.server.domain.archive.dto.get.MyArchivePageRes;
 import com.munecting.server.domain.archive.service.ArchiveService;
 import com.munecting.server.global.config.BaseResponse;
 import com.munecting.server.global.config.BaseResponseStatus;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -31,10 +32,10 @@ public class ArchiveController {
     }
     //내가 업로드한 아카이브 조회
     @ResponseBody
-    @GetMapping("/{memberId}/")
-    public BaseResponse<MyArchivePageRes> getMyArchives(@PathVariable("memberId")long memberId,
-                                                        @PageableDefault(page = 0,size = 2) Pageable pageable){
-        return new BaseResponse<>(archiveService.findArchiveByMember(memberId,pageable));
+    @GetMapping("/my/")
+    public BaseResponse<MyArchivePageRes> getMyArchives(HttpServletRequest request,
+                                                        @PageableDefault(page = 0,size = 2) Pageable pageable) throws Exception {
+        return new BaseResponse<>(archiveService.findArchiveByMember(request,pageable));
     }
     // 아카이브 맵 조회
     @ResponseBody

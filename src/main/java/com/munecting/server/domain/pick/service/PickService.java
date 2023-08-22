@@ -13,7 +13,10 @@ import com.munecting.server.domain.pick.entity.Pick;
 import com.munecting.server.domain.pick.repository.PickRepository;
 import com.munecting.server.global.config.BaseResponse;
 import com.munecting.server.global.config.BaseResponseStatus;
+import com.munecting.server.global.config.secure.JWT.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,17 +31,19 @@ public class PickService {
     private final PickRepository pickRepository;
     private final MemberRepository memberRepository;
     private final ArchiveRepository archiveRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
     //픽 저장
     @Transactional
-    public void savePick(PickReq pickReq){
-        Optional<Member> findMember = memberRepository.findById(pickReq.getMemberId());
+    public void savePick(PickReq pickReq, HttpServletRequest memberId)throws Exception{
+        Optional<Member> findMember = memberRepository.findByEmail(jwtTokenProvider.getCurrentUser(memberId));
         Optional<Archive> findArchive = archiveRepository.findById(pickReq.getArchiveId());
         findArchive.get().setPickCnt();
         pickRepository.save(new Pick(pickReq.getWriting(),findMember.get(),findArchive.get()));
     }
     //내가한 픽s 조회
-    public PicksPageRes findPicks(long memberId, Pageable pageable){
-        Optional<Member> findMember = memberRepository.findById(memberId);
+    public PicksPageRes findPicks(HttpServletRequest memberId, Pageable pageable)throws Exception{
+        Optional<Member> findMember = memberRepository.findByEmail(jwtTokenProvider.getCurrentUser(memberId));
         return pickRepository.findPicksByMember(findMember.get(),pageable);
     }
     //픽 상세 조회

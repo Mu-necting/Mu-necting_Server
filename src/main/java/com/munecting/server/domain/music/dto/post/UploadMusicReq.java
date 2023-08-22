@@ -1,6 +1,7 @@
 package com.munecting.server.domain.music.dto.post;
 
 import com.munecting.server.domain.music.entity.MusicGenre;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,4 @@ public class UploadMusicReq {
     private int plusTime;
     private double pointX;
     private double pointY;
-    private int memberId;
 }

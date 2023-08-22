@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PickReq {
     private String writing;
-    private long memberId;
     private long archiveId;
 }
