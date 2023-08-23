@@ -68,13 +68,4 @@ public class Archive extends BaseEntity {
     public void setStatus(){
         this.status = 'D';
     }
-    //test용
-    public Archive(Member memberId,Music musicId){
-        this.memberId = memberId;
-        this.musicId = musicId;
-    }
-    public Archive(Member memberId){
-        this.memberId = memberId;
-    }
-
 }

@@ -41,8 +41,4 @@ public class Music extends BaseEntity {
         this.genre = genre;
         this.artist = artist;
     }
-    //test
-    public Music(String coverImg){
-        this.coverImg = coverImg;
-    }
 }
