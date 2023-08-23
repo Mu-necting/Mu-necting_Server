@@ -50,7 +50,7 @@ public class SocialLoginService {
                     .name(name)
                     .password(password)
                     .profileImage(image)
-                    .all_replyCnt(0L)
+                    .replyTotalCnt(0L)
                     .status('A')
                     .role(String.valueOf(RoleType.USER))
                     .login_cnt(0L)

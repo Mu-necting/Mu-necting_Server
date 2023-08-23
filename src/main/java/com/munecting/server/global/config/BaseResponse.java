@@ -33,4 +33,19 @@ public class BaseResponse<T> {
         this.message = status.getMessage();
         this.code = status.getCode();
     }
+
+    // 추가: 실패 메시지만 입력하여 응답 생성
+    public static <T> BaseResponse<T> fail(Boolean isSuccess, String message, int code) {
+        return new BaseResponse<>(isSuccess, message, code, null);
+    }
+
+    // 추가: 성공 응답 생성
+    public static <T> BaseResponse<T> success(T result) {
+        return new BaseResponse<>(result);
+    }
+
+    // 추가: 성공 응답 생성 (메시지와 코드 추가)
+    public static <T> BaseResponse<T> success(String message, int code, T result) {
+        return new BaseResponse<>(true, message, code, result);
+    }
 }

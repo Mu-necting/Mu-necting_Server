@@ -23,6 +23,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/musics")
 @RequiredArgsConstructor
@@ -48,18 +51,21 @@ public class MusicController {
     }
 
     @PostMapping("/youtube-fulllink")
-    public ResponseEntity<?> searchMusic(@RequestParam String name, @RequestParam String artist) {
+    public ResponseEntity<BaseResponse<Map<String, Object>>> searchMusic(@RequestParam String name, @RequestParam String artist) {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(artist)) {
-            return ResponseEntity.badRequest().body("Song name and artist must not be empty");
+            return ResponseEntity.badRequest().body(BaseResponse.fail(false, "Song name and artist must not be empty", 400));
         }
 
         String songLink = youtubeService.getSongLink(name, artist);
         if (songLink != null) {
-            return ResponseEntity.ok(songLink);
+            Map<String, Object> result = new HashMap<>();
+            result.put("YoutubeLink", songLink);
+            return ResponseEntity.ok(BaseResponse.success("요청에 성공하였습니다.", 1000, result));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Song not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponse.fail(false, "Song not found", 404));
         }
     }
+
 
 }
 

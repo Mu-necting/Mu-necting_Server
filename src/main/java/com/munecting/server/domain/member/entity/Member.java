@@ -40,8 +40,8 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(name = "name", nullable = true)
     private String name;
 
-    @Column(name = "all_replyCnt", nullable = true)
-    private Long all_replyCnt;
+   // @Column(name = "all_replyCnt", nullable = true)
+    //private Long all_replyCnt;
 
     @Column(name = "profileImage", nullable = true)
     private String profileImage;
@@ -60,12 +60,13 @@ public class Member extends BaseEntity implements UserDetails {
     private Long login_cnt;
 
     @Column(name = "reply_total_cnt")
-    private Integer replyTotalCnt;
-    public void setReplyTotalCnt(int replyTotalCnt) {
+    private Long replyTotalCnt;
+    public void setReplyTotalCnt(long replyTotalCnt) {
         this.replyTotalCnt = replyTotalCnt;
     }
 
-    @OneToMany(mappedBy = "memberId")
+    @OneToMany(mappedBy = "memberId", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Archive> archives = new ArrayList<>();
     @OneToMany(mappedBy = "memberId")
     private List<Reply> replies = new ArrayList<>();
@@ -77,7 +78,7 @@ public class Member extends BaseEntity implements UserDetails {
                 .email(email)
                 .password(password)
                 .name(name)
-                .all_replyCnt(all_replyCnt)
+                .replyTotalCnt(replyTotalCnt)
                 .profileImage(profileImage)
                 .status(status)
                 .role(role)
@@ -89,9 +90,9 @@ public class Member extends BaseEntity implements UserDetails {
     public Member(String name){
         this.name=name;
     }
-    public Member(String name, Long all_replyCnt){
+    public Member(String name, Long replyTotalCnt){
         this.name=name;
-        this.all_replyCnt=all_replyCnt;
+        this.replyTotalCnt=replyTotalCnt;
     }
 
     // UserDetails 상속

@@ -39,7 +39,6 @@ public class Archive extends BaseEntity {
     public int getReplyCnt() {
         return replyCnt;
     }
-
     public void increaseReplyCnt() {
         this.replyCnt++;
     }

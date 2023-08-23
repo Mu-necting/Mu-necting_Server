@@ -1,4 +1,5 @@
 package com.munecting.server.domain.reply.service;
+
 import com.munecting.server.domain.archive.entity.Archive;
 import com.munecting.server.domain.archive.repository.ArchiveRepository;
 import com.munecting.server.domain.member.entity.Member;
@@ -10,11 +11,11 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 
 @Service
 public class ReplyService {
@@ -23,7 +24,7 @@ public class ReplyService {
     private final ArchiveRepository archiveRepository;
     private final MemberRepository memberRepository;
 
-    public ReplyService(ReplyRepository replyRepository, ArchiveRepository archiveRepository,MemberRepository memberRepository) {
+    public ReplyService(ReplyRepository replyRepository, ArchiveRepository archiveRepository, MemberRepository memberRepository) {
         this.replyRepository = replyRepository;
         this.archiveRepository = archiveRepository;
         this.memberRepository = memberRepository;
@@ -32,47 +33,47 @@ public class ReplyService {
     @Transactional
     public void reply(Long archiveId, ReplyRequestDTO replyRequest) {
         Long memberId = replyRequest.getMemberId();
-        Optional<Member> member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + memberId));
 
         Archive archive = archiveRepository.findArchiveById(archiveId);
+        if (archive == null) {
+            throw new DataRetrievalFailureException("Archive not found with id: " + archiveId);
+        }
 
-        //중복 방지
-        if (replyRepository.existsByMemberIdAndArchiveId(member.get(), archive)) {
+        if (replyRepository.existsByMemberIdAndArchiveId(member, archive)) {
             throw new IllegalArgumentException("Reply already exists.");
         }
 
         Reply reply = new Reply();
-        reply.setMemberId(member.get());
+        reply.setMemberId(member);
         reply.setStatus("REPLIED");
         reply.setArchiveId(archive);
 
-        // Reply 저장
         replyRepository.save(reply);
-        archive.increaseReplyCnt(); // replyCnt 증가
+        archive.increaseReplyCnt();
         archiveRepository.save(archive);
 
-        updateReplyTotalCnt(member.get().getId());
-
+        updateReplyTotalCnt();
     }
 
     @Transactional
-    public void updateReplyTotalCnt(Long archiveId) {
-        Archive archive = archiveRepository.findArchiveById(archiveId);
+    public void updateReplyTotalCnt() {
+        List<Member> allMembers = memberRepository.findAll();
 
-        Long memberId = archive.getMemberId().getId();
-        Optional<Member> member = memberRepository.findById(memberId);
+        for (Member member : allMembers) {
+            List<Archive> archivesWithSameMember = archiveRepository.findAllByMemberId(member.getId());
 
-        List<Archive> archivesWithSameMember = archiveRepository.findAllByMemberId(member.get());
-        int replyTotalCnt = archivesWithSameMember.stream()
-                .mapToInt(Archive::getReplyCnt)
-                .sum();
+            int replyTotalCnt = archivesWithSameMember.stream()
+                    .mapToInt(Archive::getReplyCnt)
+                    .sum();
 
-        member.get().setReplyTotalCnt(replyTotalCnt);
-        memberRepository.save(member.get());
+            member.setReplyTotalCnt(replyTotalCnt);
+            memberRepository.save(member);
+        }
     }
 
-//reply 개수 조회
-@Transactional
+    @Transactional
     public int getReplyCount(Long archiveId) {
         Archive archive = archiveRepository.findArchiveById(archiveId);
         if (archive == null) {
@@ -81,26 +82,31 @@ public class ReplyService {
         return archive.getReplyCnt();
     }
 
-
     @Transactional
     public void unreply(Long archiveId, Long memberId) {
         Archive archive = archiveRepository.findArchiveById(archiveId);
-        Optional<Member> member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + memberId));
 
-
-        Reply reply = replyRepository.findByMemberIdAndArchiveId(member.get(), archive)
+        Reply reply = replyRepository.findByMemberIdAndArchiveId(member, archive)
                 .orElseThrow(() -> new DataRetrievalFailureException("Reply not found for member and archive"));
 
-        // Reply 삭제
         replyRepository.delete(reply);
 
-        // archive의 replyCnt 감소
         archive.decreaseReplyCnt();
         archiveRepository.save(archive);
 
-        updateReplyTotalCnt(member.get().getId());
+        updateReplyTotalCnt();
     }
 
+    @Transactional
+    public Set<String> getReplySendersForMember(Long memberId) {
+        List<Long> archiveIdsForMember = archiveRepository.findArchiveIdsByMemberId(memberId);
+
+        List<Long> senderMemberIds = replyRepository.findSenderMemberIdsByArchiveIds(archiveIdsForMember);
+
+        List<String> senderNames = memberRepository.findNamesByMemberIds(senderMemberIds);
+
+        return new HashSet<>(senderNames);
+    }
 }
-
-

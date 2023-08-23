@@ -21,7 +21,7 @@ public class MemberDTO {
 
     private String name;
 
-    private Long all_replyCnt;
+    private Long replyTotalCnt;
 
     private String profileImage;
 
@@ -38,7 +38,7 @@ public class MemberDTO {
                 .email(email)
                 .password(password)
                 .name(name)
-                .all_replyCnt(all_replyCnt)
+                .replyTotalCnt(replyTotalCnt)
                 .profileImage(profileImage)
                 .status(status)
                 .role(role)
