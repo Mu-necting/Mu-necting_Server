@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ArchiveRepository extends JpaRepository<Archive, Long>, ArchiveRepositoryCustom {
     Archive findArchiveById(Long archiveId);
-    Optional<Member> findByEmail(String email);
+
     @Query("SELECT a FROM Archive a WHERE a.memberId.id = :memberId")
     List<Archive> findAllByMemberId(@Param("memberId") Long memberId);
     @Query("SELECT a.id FROM Archive a WHERE a.memberId.id = :memberId")
