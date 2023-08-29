@@ -178,9 +178,9 @@ public class LoginService {
         Member member = memberRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new Exception("가입되지 않은 이메일입니다."));
         // 이름 확인
-        if (!member.getName().equals(user.getName())) {
-            throw new Exception("일치하는 사용자 정보가 없습니다.");
-        }
+//        if (!member.getName().equals(user.getName())) {
+//            throw new Exception("일치하는 사용자 정보가 없습니다.");
+//        }
 //        Random r = new Random();
 //        int num = r.nextInt(999999); // 랜덤 난수 설정
 

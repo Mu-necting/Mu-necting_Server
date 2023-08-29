@@ -36,45 +36,45 @@ public class SocialLoginController {
     private SocialLoginService socialLoginService;
     // ----- 소셜 로그인 관련
     @GetMapping("/oauth2/kakao")
-    public @ResponseBody String kakaoCallback(String code) throws ParseException {
+    public @ResponseBody String kakaoCallback(String accesstoken) throws ParseException {
 
-        RestTemplate rt = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", authType);
-        params.add("client_id", clientId);
-        params.add("client_secret", clientSecret);
-        params.add("redirect_uri", redirectUri);
-        params.add("code", code);
-
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
-
-        ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        OAuthToken oAuthToken = null;
-
-        try {
-            oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        System.out.println("카카오 액세스 토큰 : " + oAuthToken.getAccess_token());
+//        RestTemplate rt = new RestTemplate();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+//
+//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//        params.add("grant_type", authType);
+//        params.add("client_id", clientId);
+//        params.add("client_secret", clientSecret);
+//        params.add("redirect_uri", redirectUri);
+//        params.add("code", code);
+//
+//        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+//
+//        ResponseEntity<String> response = rt.exchange(
+//                "https://kauth.kakao.com/oauth/token",
+//                HttpMethod.POST,
+//                kakaoTokenRequest,
+//                String.class
+//        );
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        OAuthToken oAuthToken = null;
+//
+//        try {
+//            oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("카카오 액세스 토큰 : " + oAuthToken.getAccess_token());
 
 
 
         RestTemplate rt2 = new RestTemplate();
 
         HttpHeaders headers2 = new HttpHeaders();
-        headers2.add("Authorization", "Bearer "+oAuthToken.getAccess_token());
+        headers2.add("Authorization", "Bearer "+ accesstoken);
         headers2.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
         HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest2 = new HttpEntity<>(null, headers2);

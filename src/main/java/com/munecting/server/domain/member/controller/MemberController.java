@@ -40,10 +40,11 @@ public class MemberController {
 
     // 유저 정보 수정
     @PostMapping("")
-    public BaseResponse<String> updateMyInfo(@RequestPart("member") MemberDTO user, HttpServletRequest request,
+    public BaseResponse<Optional<Member>> updateMyInfo(@RequestPart("member") MemberDTO user, HttpServletRequest request,
                                              @RequestPart("profile") MultipartFile profile) throws Exception {
         memberService.updateMyInfo(user, request,profile);
-        return new BaseResponse<>("정보가 수정되었습니다.");
+        Optional<Member> member = memberService.getMyInfo(request);
+        return new BaseResponse<>(member);
     }
 
     // 유저 비밀번호 확인

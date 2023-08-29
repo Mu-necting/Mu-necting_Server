@@ -42,8 +42,6 @@ public class ArchiveService {
     //아카이브 저장
     @Transactional
     public void saveArchive(UploadMusicReq uploadMusicReq, Music music,HttpServletRequest memberId) throws Exception {
-        memberRepository.save(new Member("member1"));
-
         LocalDateTime endTime = LocalDateTime.now().plusHours(uploadMusicReq.getPlusTime());
         Optional<Member> findMember = memberRepository.findByEmail(jwtTokenProvider.getCurrentUser(memberId));
         archiveRepository.save(

@@ -87,14 +87,6 @@ public class Member extends BaseEntity implements UserDetails {
                 .build();
     }
 
-    public Member(String name){
-        this.name=name;
-    }
-    public Member(String name, Long replyTotalCnt){
-        this.name=name;
-        this.replyTotalCnt=replyTotalCnt;
-    }
-
     // UserDetails 상속
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
