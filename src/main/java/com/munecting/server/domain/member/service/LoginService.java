@@ -71,7 +71,7 @@ public class LoginService {
                 .email(user.getEmail())
                 .password(encryptedPw)
                 .name(user.getName())
-                .all_replyCnt(0L)
+                .replyTotalCnt(0L)
                 .profileImage(user.getProfileImage())
                 .status('A')
                 .role(String.valueOf(RoleType.USER))

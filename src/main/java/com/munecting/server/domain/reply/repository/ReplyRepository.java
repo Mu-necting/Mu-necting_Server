@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,8 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     void deleteByMemberIdAndArchiveId(Member member, Archive archive);
     int countByMemberId(Member member);
     Optional<Reply> findByMemberIdAndArchiveId(Member member, Archive archive);
+
+    @Query("SELECT DISTINCT r.memberId.id FROM Reply r WHERE r.archiveId.id IN :archiveIds")
+    List<Long> findSenderMemberIdsByArchiveIds(@Param("archiveIds") List<Long> archiveIds);
+
 }
